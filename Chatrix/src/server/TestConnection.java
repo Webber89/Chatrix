@@ -8,6 +8,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
 
+import client.MessageHandler;
+
 public class TestConnection {
 
 	public static void main(String[] args) throws IOException {
@@ -15,7 +17,7 @@ public class TestConnection {
 	}
 
 	public TestConnection() throws IOException {
-//		MessageHandler.getInstance().sendMessage("asdsad");
+		MessageHandler.getInstance().sendMessage("asdsad");
 		System.out.println(getIP());
 		ServerSocket serverSocket = new ServerSocket(7000);
 		Socket socket = serverSocket.accept();
@@ -25,14 +27,14 @@ public class TestConnection {
         InputStreamReader isr = new InputStreamReader(is);
         BufferedReader br = new BufferedReader(isr);
         boolean done = false;
-        while (!done) {
+      
         String message = br.readLine();
-        System.out.println("Message received from client is " + message);
-        done = true;
+        String msgOut ="";
+        
+        while ((message = br.readLine()) != null) {
+            msgOut = msgOut.concat(message);  
         }
-		
-		System.out.println("Got connection!");
-		
+        System.out.println(msgOut);
 		serverSocket.close();
 	}
 
