@@ -15,6 +15,7 @@ public class TestConnection {
 	}
 
 	public TestConnection() throws IOException {
+//		MessageHandler.getInstance().sendMessage("asdsad");
 		System.out.println(getIP());
 		ServerSocket serverSocket = new ServerSocket(7000);
 		Socket socket = serverSocket.accept();
@@ -26,8 +27,8 @@ public class TestConnection {
         boolean done = false;
         while (!done) {
         String message = br.readLine();
-        
         System.out.println("Message received from client is " + message);
+        done = true;
         }
 		
 		System.out.println("Got connection!");
