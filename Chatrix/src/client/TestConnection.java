@@ -13,6 +13,9 @@ public class TestConnection {
 
 	public TestConnection() throws IOException {
 		System.out.println(getIP());
+		MessageHandler.getInstance().sendMessage("asdsad");
+		
+		
 	}
 
 	private String getIP() throws IOException {

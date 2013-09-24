@@ -11,8 +11,8 @@ import server.Message;
 public class MessageHandler {
 
 	private static MessageHandler messageHandler = new MessageHandler();
-	private static String host = "1.1.1.0";
-	private int port = 9999;
+	private static String hostIP = "188.182.254.236";
+	private int port = 7000;
 
 	public static MessageHandler getInstance() {
 		return messageHandler;
@@ -23,18 +23,24 @@ public class MessageHandler {
 
 	}
 
-	public void sendMessage(Message message) {
+	public void sendMessage(String message) {
 
 		Socket clientSocket;
 		try {
-			clientSocket = new Socket(host, port);
-			System.out.println("Socket with IP: "
+			clientSocket = new Socket(hostIP, port);
+			System.out.println("my IP: "
 					+ clientSocket.getInetAddress().getHostAddress());
+			
 			OutputStream outputStream = clientSocket.getOutputStream();
 			OutputStreamWriter outputWriter = new OutputStreamWriter(
 					outputStream);
 			BufferedWriter bWriter = new BufferedWriter(outputWriter);
-
+			
+			System.out.println("Made it");
+			bWriter.write("Test Message\n");
+			bWriter.close();
+			clientSocket.close();
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
