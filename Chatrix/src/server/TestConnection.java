@@ -18,24 +18,24 @@ public class TestConnection {
 
 	public TestConnection() throws IOException {
 		MessageHandler.getInstance().sendMessage("asdsad");
-		System.out.println(getIP());
-		ServerSocket serverSocket = new ServerSocket(7000);
-		Socket socket = serverSocket.accept();
-		System.out.println(socket.getInetAddress().getHostAddress());
-		
-		InputStream is = socket.getInputStream();
-        InputStreamReader isr = new InputStreamReader(is);
-        BufferedReader br = new BufferedReader(isr);
-        boolean done = false;
-      
-        String message = br.readLine();
-        String msgOut ="";
-        
-        while ((message = br.readLine()) != null) {
-            msgOut = msgOut.concat(message);  
-        }
-        System.out.println(msgOut);
-		serverSocket.close();
+//		System.out.println(getIP());
+//		ServerSocket serverSocket = new ServerSocket(7000);
+//		Socket socket = serverSocket.accept();
+//		System.out.println(socket.getInetAddress().getHostAddress());
+//		
+//		InputStream is = socket.getInputStream();
+//        InputStreamReader isr = new InputStreamReader(is);
+//        BufferedReader br = new BufferedReader(isr);
+//        boolean done = false;
+//      
+//        String message = br.readLine();
+//        String msgOut ="";
+//        
+//        while ((message = br.readLine()) != null) {
+//            msgOut = msgOut.concat(message);  
+//        }
+//        System.out.println(msgOut);
+//		serverSocket.close();
 	}
 
 	private String getIP() throws IOException {
