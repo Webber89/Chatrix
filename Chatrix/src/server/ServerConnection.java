@@ -39,7 +39,7 @@ public class ServerConnection {
 
 	protected void runServer() throws Exception {
 		setIP();
-		ServerSocket serverSocket = new ServerSocket(PORT);
+		ServerSocket serverSocket = new ServerSocket(port);
 		Socket socket = serverSocket.accept();
 
 		InputStream is = socket.getInputStream();
@@ -70,7 +70,7 @@ public class ServerConnection {
 		String cancelMsg = in1.readLine();
 		System.out.println(cancelMsg);
 		
-		URL updateLink = new URL("http://thebecw.appspot.com/updatelink?sae=chat&link=" + ip + ":" + PORT);
+		URL updateLink = new URL("http://thebecw.appspot.com/updatelink?sae=chat&link=" + ip + ":" + port);
 		BufferedReader in2 = new BufferedReader(new InputStreamReader(
                 updateLink.openStream()));
 		String linkMsg = in2.readLine();
