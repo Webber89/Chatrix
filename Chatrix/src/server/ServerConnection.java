@@ -13,20 +13,13 @@ import java.net.Socket;
 import java.net.URL;
 import java.util.StringTokenizer;
 
-public class TestConnection {
-	private static final int PORT = 16000;
+public class ServerConnection {
+	private int port;
 	public static String serverIP;
 	public static int serverPort;
 
-	public static void main(String[] args) throws Exception {
-//		Message message = new Message("MSG");
-//		message.addKeyValue("room", "public");
-//		message.addKeyValue("content", "hello, world");
-//		message.toJson();
-		new TestConnection();
-	}
-
-	public TestConnection() throws Exception {
+	public ServerConnection(int port) throws Exception {
+		this.port = port;
 //		runServer();
 		runClient();
 	}
