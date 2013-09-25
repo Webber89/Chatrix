@@ -2,11 +2,8 @@
 package server;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -15,30 +12,28 @@ import java.util.StringTokenizer;
 
 public class ServerConnection {
 	private int port;
-	public static String serverIP;
-	public static int serverPort;
+	public String ip;
 
-	public ServerConnection(int port) throws Exception {
+	public ServerConnection(int port, boolean isPublic) throws Exception {
 		this.port = port;
-//		runServer();
-		runClient();
+		setIP(isPublic);
+		broadcastIP();
+		runServer();
+//		runClient();
 	}
 
-	protected void runClient() throws Exception {
-		getIP();
-		Socket clientSocket = new Socket(serverIP, serverPort);
-		OutputStream outputStream = clientSocket.getOutputStream();
-		OutputStreamWriter outputWriter = new OutputStreamWriter(
-				outputStream);
-		BufferedWriter bWriter = new BufferedWriter(outputWriter);
-		
-		bWriter.write("Random string\n");
-		bWriter.close();
-		clientSocket.close();
+	private void setIP(boolean isPublic) throws Exception {
+		if (isPublic) {
+		URL amazonIP = new URL("http://checkip.amazonaws.com");
+		BufferedReader in = new BufferedReader(new InputStreamReader(
+		                amazonIP.openStream()));
+		ip = in.readLine();
+		} else {
+		ip = InetAddress.getLocalHost().getHostAddress();
+		}
 	}
 
 	protected void runServer() throws Exception {
-		setIP();
 		ServerSocket serverSocket = new ServerSocket(port);
 		Socket socket = serverSocket.accept();
 
@@ -57,24 +52,24 @@ public class ServerConnection {
 		serverSocket.close();
 	}
 
-	protected void setIP() throws Exception {
-//		URL amazonIP = new URL("http://checkip.amazonaws.com");
-//		BufferedReader in = new BufferedReader(new InputStreamReader(
-//		                amazonIP.openStream()));
-//
-//		String ip = in.readLine();
-		String ip = InetAddress.getLocalHost().getHostAddress();
+	protected void broadcastIP() throws Exception {
 		URL cancelLink = new URL("http://thebecw.appspot.com/updatelink?sae=chat&cancel=true");
 		BufferedReader in1 = new BufferedReader(new InputStreamReader(
                 cancelLink.openStream()));
 		String cancelMsg = in1.readLine();
-		System.out.println(cancelMsg);
+		if (cancelMsg.equals("ok")) {
+		} else {
+			throw new Exception("Unable to cancel broadcast link");
+		}
 		
 		URL updateLink = new URL("http://thebecw.appspot.com/updatelink?sae=chat&link=" + ip + ":" + port);
 		BufferedReader in2 = new BufferedReader(new InputStreamReader(
                 updateLink.openStream()));
 		String linkMsg = in2.readLine();
-		System.out.println(linkMsg);
+		if (linkMsg.equals("ok")) {
+		} else {
+			throw new Exception("Unable to broadcast link");
+		}
 		
 		getIP();
 	}
@@ -84,8 +79,8 @@ public class ServerConnection {
 		BufferedReader in3 = new BufferedReader(new InputStreamReader(getLink.openStream()));
 		String serverAddress = in3.readLine();
 		StringTokenizer tokenizer = new StringTokenizer(serverAddress, ":");
-		serverIP = tokenizer.nextToken();
-		serverPort = Integer.parseInt(tokenizer.nextToken());
-		System.out.println(serverIP + ", " + serverPort);
+		ip = tokenizer.nextToken();
+		port = Integer.parseInt(tokenizer.nextToken());
+		System.out.println(ip + ", " + port);
 	}
 }
