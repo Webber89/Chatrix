@@ -1,77 +1,97 @@
 package server;
 
 import java.io.BufferedReader;
-import java.io.IOException;
+import java.io.BufferedWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
-import java.util.HashMap;
-
-import client.MessageHandler;
-
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonStreamParser;
-import com.google.gson.stream.JsonReader;
+import java.util.StringTokenizer;
 
 public class TestConnection {
+	private static final int PORT = 10000;
+	public static String serverIP;
+	public static int serverPort;
 
-	public static void main(String[] args) throws IOException {
-		Message message = new Message("MSG");
-		message.addKeyValue("room", "public");
-		message.addKeyValue("content", "hello, world");
-		message.toJson();
-//		new TestConnection();
+	public static void main(String[] args) throws Exception {
+//		Message message = new Message("MSG");
+//		message.addKeyValue("room", "public");
+//		message.addKeyValue("content", "hello, world");
+//		message.toJson();
+		new TestConnection();
 	}
 
-	public TestConnection() throws IOException {
-		MessageHandler.getInstance().sendMessage("asdsad");
-//		System.out.println(getIP());
-		ServerSocket serverSocket = new ServerSocket(7000);
+	public TestConnection() throws Exception {
+		runServer();
+//		runClient();
+	}
+
+	protected void runClient() throws Exception {
+		getIP();
+		Socket clientSocket = new Socket(serverIP, serverPort);
+		OutputStream outputStream = clientSocket.getOutputStream();
+		OutputStreamWriter outputWriter = new OutputStreamWriter(
+				outputStream);
+		BufferedWriter bWriter = new BufferedWriter(outputWriter);
+		
+		
+		System.out.println("Made it");
+		bWriter.close();
+		clientSocket.close();
+	}
+
+	private void runServer() throws Exception {
+		setIP();
+		ServerSocket serverSocket = new ServerSocket(PORT);
 		Socket socket = serverSocket.accept();
-//		System.out.println(socket.getInetAddress().getHostAddress());
-//		
+
 		InputStream is = socket.getInputStream();
         InputStreamReader isr = new InputStreamReader(is);
         
-        JsonStreamParser parser = new JsonStreamParser(isr);
-        JsonElement element = parser.next();
-        JsonObject jObject = element.getAsJsonObject();
-        jObject.get("type");
+        BufferedReader br = new BufferedReader(isr);
+        String message = br.readLine();
+        String msgOut ="";
         
-        JsonReader reader = new JsonReader(isr);
-        reader.beginArray();
-        HashMap<String, String> keyValuePairs = new HashMap<String, String>();
-        while (reader.hasNext()) {
-        	reader.beginObject();
-        	String key = reader.nextName();
-        	String value = reader.nextString();
-        	keyValuePairs.put(key, value);
-        	reader.endObject();
+        while ((message = br.readLine()) != null) {
+            msgOut = msgOut.concat(message);  
         }
-        
-        reader.close();
-//        BufferedReader br = new BufferedReader(isr);
-//        boolean done = false;
-//      
-//        String message = br.readLine();
-//        String msgOut ="";
-//        
-//        while ((message = br.readLine()) != null) {
-//            msgOut = msgOut.concat(message);  
-//        }
-//        System.out.println(msgOut);
+
+        System.out.println(msgOut);
 		serverSocket.close();
 	}
 
-	protected String getIP() throws IOException {
+	protected void setIP() throws Exception {
 		URL amazonIP = new URL("http://checkip.amazonaws.com");
 		BufferedReader in = new BufferedReader(new InputStreamReader(
 		                amazonIP.openStream()));
 
 		String ip = in.readLine();
-		return ip;
+		
+		URL cancelLink = new URL("http://thebecw.appspot.com/updatelink?sae=chat&cancel=true");
+		BufferedReader in1 = new BufferedReader(new InputStreamReader(
+                cancelLink.openStream()));
+		String cancelMsg = in1.readLine();
+		System.out.println(cancelMsg);
+		
+		URL updateLink = new URL("http://thebecw.appspot.com/updatelink?sae=chat&link=" + ip + ":" + PORT);
+		BufferedReader in2 = new BufferedReader(new InputStreamReader(
+                updateLink.openStream()));
+		String linkMsg = in2.readLine();
+		System.out.println(linkMsg);
+		
+		getIP();
+	}
+	
+	protected void getIP() throws Exception {
+		URL getLink = new URL("http://thebecw.appspot.com/spreadsheet?chat=true");
+		BufferedReader in3 = new BufferedReader(new InputStreamReader(getLink.openStream()));
+		String serverAddress = in3.readLine();
+		StringTokenizer tokenizer = new StringTokenizer(serverAddress, ":");
+		serverIP = tokenizer.nextToken();
+		serverPort = Integer.parseInt(tokenizer.nextToken());
+		System.out.println(serverIP + ", " + serverPort);
 	}
 }
