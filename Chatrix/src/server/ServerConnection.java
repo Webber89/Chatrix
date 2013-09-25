@@ -13,20 +13,13 @@ import java.net.Socket;
 import java.net.URL;
 import java.util.StringTokenizer;
 
-public class TestConnection {
-	private static final int PORT = 16000;
+public class ServerConnection {
+	private int port;
 	public static String serverIP;
 	public static int serverPort;
 
-	public static void main(String[] args) throws Exception {
-//		Message message = new Message("MSG");
-//		message.addKeyValue("room", "public");
-//		message.addKeyValue("content", "hello, world");
-//		message.toJson();
-		new TestConnection();
-	}
-
-	public TestConnection() throws Exception {
+	public ServerConnection(int port) throws Exception {
+		this.port = port;
 //		runServer();
 		runClient();
 	}
@@ -46,7 +39,7 @@ public class TestConnection {
 
 	protected void runServer() throws Exception {
 		setIP();
-		ServerSocket serverSocket = new ServerSocket(PORT);
+		ServerSocket serverSocket = new ServerSocket(port);
 		Socket socket = serverSocket.accept();
 
 		InputStream is = socket.getInputStream();
@@ -77,7 +70,7 @@ public class TestConnection {
 		String cancelMsg = in1.readLine();
 		System.out.println(cancelMsg);
 		
-		URL updateLink = new URL("http://thebecw.appspot.com/updatelink?sae=chat&link=" + ip + ":" + PORT);
+		URL updateLink = new URL("http://thebecw.appspot.com/updatelink?sae=chat&link=" + ip + ":" + port);
 		BufferedReader in2 = new BufferedReader(new InputStreamReader(
                 updateLink.openStream()));
 		String linkMsg = in2.readLine();
