@@ -6,13 +6,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
 import java.util.StringTokenizer;
 
 public class TestConnection {
-	private static final int PORT = 10000;
+	private static final int PORT = 16000;
 	public static String serverIP;
 	public static int serverPort;
 
@@ -25,8 +26,8 @@ public class TestConnection {
 	}
 
 	public TestConnection() throws Exception {
-		runServer();
-//		runClient();
+//		runServer();
+		runClient();
 	}
 
 	protected void runClient() throws Exception {
@@ -37,13 +38,12 @@ public class TestConnection {
 				outputStream);
 		BufferedWriter bWriter = new BufferedWriter(outputWriter);
 		
-		
-		System.out.println("Made it");
+		bWriter.write("Random string\n");
 		bWriter.close();
 		clientSocket.close();
 	}
 
-	private void runServer() throws Exception {
+	protected void runServer() throws Exception {
 		setIP();
 		ServerSocket serverSocket = new ServerSocket(PORT);
 		Socket socket = serverSocket.accept();
@@ -53,23 +53,23 @@ public class TestConnection {
         
         BufferedReader br = new BufferedReader(isr);
         String message = br.readLine();
-        String msgOut ="";
+        System.out.println(message);
         
+        String msgOut ="";
         while ((message = br.readLine()) != null) {
             msgOut = msgOut.concat(message);  
         }
 
-        System.out.println(msgOut);
 		serverSocket.close();
 	}
 
 	protected void setIP() throws Exception {
-		URL amazonIP = new URL("http://checkip.amazonaws.com");
-		BufferedReader in = new BufferedReader(new InputStreamReader(
-		                amazonIP.openStream()));
-
-		String ip = in.readLine();
-		
+//		URL amazonIP = new URL("http://checkip.amazonaws.com");
+//		BufferedReader in = new BufferedReader(new InputStreamReader(
+//		                amazonIP.openStream()));
+//
+//		String ip = in.readLine();
+		String ip = InetAddress.getLocalHost().getHostAddress();
 		URL cancelLink = new URL("http://thebecw.appspot.com/updatelink?sae=chat&cancel=true");
 		BufferedReader in1 = new BufferedReader(new InputStreamReader(
                 cancelLink.openStream()));
