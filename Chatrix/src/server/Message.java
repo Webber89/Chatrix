@@ -25,11 +25,20 @@ public class Message {
 	
 	// To JSON and back again
 	public String toJson() throws JsonParseException, JsonMappingException, IOException {
-		Gson gson = new Gson();
-		String json = gson.toJson(keyValuePairs);
+		String json = new Gson().toJson(keyValuePairs);
+		String mappedJson = new ObjectMapper().writeValueAsString(keyValuePairs);
+		
+		
 		System.out.println(json);
+		System.out.println(mappedJson);
+		
 		@SuppressWarnings("unchecked")
-		LinkedHashMap<String, Object> test = new ObjectMapper().readValue(json, LinkedHashMap.class);
+		LinkedHashMap<String, Object> test2 = new Gson().fromJson(json, LinkedHashMap.class);
+		for (String s : test2.keySet())
+			System.out.println("key: " + s + ", value: " + test2.get(s));
+		
+		@SuppressWarnings("unchecked")
+		LinkedHashMap<String, Object> test = new ObjectMapper().readValue(mappedJson, LinkedHashMap.class);
 		for (String s : test.keySet())
 			System.out.println("key: " + s + ", value: " + test.get(s));
 		

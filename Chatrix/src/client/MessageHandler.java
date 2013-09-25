@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
-import net.sf.json.JSONObject;
 
 import server.Message;
 
@@ -37,11 +36,8 @@ public class MessageHandler {
 					outputStream);
 			BufferedWriter bWriter = new BufferedWriter(outputWriter);
 			
-			JSONObject json = new JSONObject();
-            json.put("JOIN","User");
 			
 			System.out.println("Made it");
-			bWriter.write(json.toString());
 			bWriter.close();
 			clientSocket.close();
 			
