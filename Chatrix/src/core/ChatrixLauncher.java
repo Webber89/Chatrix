@@ -1,25 +1,37 @@
 package core;
 
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
-import javax.swing.JFrame;
-import javax.swing.JRadioButton;
+import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import server.Server;
-
 import client.Client;
-
-import java.awt.Font;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import javax.swing.Icon;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class ChatrixLauncher
 {
 
     private JFrame frame;
     private final ButtonGroup buttonGroup = new ButtonGroup();
+    JPanel panel;
 
     /**
      * Launch the application.
@@ -34,8 +46,7 @@ public class ChatrixLauncher
 		{
 		    ChatrixLauncher window = new ChatrixLauncher();
 		    window.frame.setVisible(true);
-		    
-		    
+
 		} catch (Exception e)
 		{
 		    e.printStackTrace();
@@ -58,34 +69,100 @@ public class ChatrixLauncher
     private void initialize()
     {
 	frame = new JFrame();
-	frame.setBounds(100, 100, 400, 300);
+	frame.setBounds(500, 250, 400, 225);
 	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	frame.getContentPane().setLayout(null);
+	frame.getContentPane().setBackground(Color.WHITE);
+
+	 try
+	{
+	    UIManager.setLookAndFeel(
+	                UIManager.getCrossPlatformLookAndFeelClassName());
+	} catch (ClassNotFoundException | InstantiationException
+		| IllegalAccessException | UnsupportedLookAndFeelException e1)
+	{
+	    e1.printStackTrace();
+	}
 	
-	JRadioButton rdbtnServer = new JRadioButton("Server");
-	buttonGroup.add(rdbtnServer);
-	rdbtnServer.setBounds(45, 46, 109, 23);
-	frame.getContentPane().add(rdbtnServer);
-	
-	JRadioButton rdbtnClient = new JRadioButton("Client");
-	buttonGroup.add(rdbtnClient);
-	rdbtnClient.setBounds(234, 46, 109, 23);
-	frame.getContentPane().add(rdbtnClient);
-	
-	JButton btnConnect = new JButton("Enter the Chatrix");
-	btnConnect.addActionListener(new ActionListener() {
-		public void actionPerformed(ActionEvent arg0) {
-		    if (buttonGroup.getElements().nextElement().isSelected()){
-			new Client();
-		    }
-		    else{
-			new Server();
-		    }
+	panel = new JPanel();
+	panel.setBackground(Color.WHITE);
+	panel.addMouseListener(new MouseAdapter()
+	{
+	    @Override
+	    public void mouseClicked(MouseEvent arg0)
+	    {
+		new Server();
+		frame.dispose();
+	    }
+
+	    @Override
+	    public void mouseEntered(MouseEvent arg0)
+	    {
+		panel.removeAll();
+		try
+		{
+		    BufferedImage myPicture3 = ImageIO.read(new File(
+			    "resources/redeye.png"));
+		    JLabel picLabel3 = new JLabel(new ImageIcon(myPicture3));
+		    panel.add(picLabel3);
+		    frame.revalidate();
+
+		} catch (IOException e)
+		{
+		    e.printStackTrace();
+		}
+	    }
+		@Override
+		public void mouseExited(MouseEvent e) {
+		    panel.removeAll();
+			try
+			{
+			    BufferedImage myPicture3 = ImageIO.read(new File(
+				    "resources/matrix.png"));
+			    JLabel picLabel3 = new JLabel(new ImageIcon(myPicture3));
+			    panel.add(picLabel3);
+			    frame.revalidate();
+
+			} catch (IOException e1)
+			{
+			    e1.printStackTrace();
+			}
 		}
 	});
-	btnConnect.setFont(new Font("Comic Sans MS", Font.BOLD | Font.ITALIC, 17));
-	btnConnect.setBounds(90, 177, 192, 73);
-	frame.getContentPane().add(btnConnect);
 	
+	panel.setBounds(26, 31, 139, 130);
+
+	JPanel panel_1 = new JPanel();
+	panel_1.setBounds(203, 31, 139, 130);
+	panel_1.setBackground(Color.WHITE);
+	panel_1.addMouseListener(new MouseAdapter()
+	{
+	    @Override
+	    public void mouseClicked(MouseEvent arg0)
+	    {
+		new Client();
+		frame.dispose();
+	    }
+	});
+
+	try
+	{
+
+	    BufferedImage myPicture = ImageIO.read(new File(
+		    "resources/matrix.png"));
+	    JLabel picLabel = new JLabel(new ImageIcon(myPicture));
+	    panel.add(picLabel);
+	    frame.getContentPane().add(panel);
+
+	    BufferedImage myPicture1 = ImageIO.read(new File(
+		    "resources/chatrix.png"));
+	    JLabel picLabel1 = new JLabel(new ImageIcon(myPicture1));
+	    panel_1.add(picLabel1);
+	    frame.getContentPane().add(panel_1);
+
+	} catch (IOException e)
+	{
+	}
+
     }
 }
