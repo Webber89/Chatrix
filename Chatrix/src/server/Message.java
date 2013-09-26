@@ -10,13 +10,30 @@ import com.google.gson.Gson;
 
 public class Message {
 	private LinkedHashMap<String, String> keyValuePairs = new LinkedHashMap<String, String>();
+	private Type type;
+	
+	public enum Type {
+		MESSAGE("MSG"),
+		JOIN("JOIN"),
+		QUIT("QUIT"),
+		CREATE("CRT"),
+		INFO("INFO"),
+		INVITE("INV");
+		
+		String type;
+		
+		Type(String type) {
+			this.type = type;
+		}
+	}
 	
 	public void addKeyValue(String key, String value) {
 		keyValuePairs.put(key, value);
 	}
 	
-	public Message(String messageType) {
-		keyValuePairs.put("type", messageType);
+	public Message(Type type) {
+		this.type = type;
+		keyValuePairs.put("type", this.type.type);
 	}
 	
 //	public Message(String json) {

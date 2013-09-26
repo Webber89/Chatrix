@@ -2,6 +2,7 @@
 package server;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
@@ -82,5 +83,14 @@ public class ServerConnection {
 		ip = tokenizer.nextToken();
 		port = Integer.parseInt(tokenizer.nextToken());
 		System.out.println(ip + ", " + port);
+	}
+	
+	public void testMessage() {
+		Message message = new Message(Message.Type.JOIN);
+		try {
+			System.out.println(message.toJson());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
