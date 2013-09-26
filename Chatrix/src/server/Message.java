@@ -13,17 +13,19 @@ public class Message {
 	private Type type;
 	
 	public enum Type {
-		MESSAGE("MSG"),
-		JOIN("JOIN"),
-		QUIT("QUIT"),
-		CREATE("CRT"),
-		INFO("INFO"),
-		INVITE("INV");
+		MESSAGE("MSG", 2),
+		JOIN("JOIN", 1),
+		QUIT("QUIT", 0),
+		CREATE("CRT", 2),
+		INFO("INFO", 0),
+		INVITE("INV", 2);
 		
 		String type;
+		int minParams;
 		
-		Type(String type) {
+		Type(String type, int minParams) {
 			this.type = type;
+			this.minParams = minParams;
 		}
 	}
 	
@@ -41,7 +43,9 @@ public class Message {
 //	}
 	
 	// To JSON and back again
-	public String toJson() throws JsonParseException, JsonMappingException, IOException {
+	public String toJson() throws JsonParseException, JsonMappingException, IOException, IllegalMessageException {
+		if (keyValuePairs.size()<=type.minParams)
+			throw new IllegalMessageException("Insufficient parameters");
 		String json = new Gson().toJson(keyValuePairs);
 		String mappedJson = new ObjectMapper().writeValueAsString(keyValuePairs);
 		
