@@ -23,7 +23,7 @@ public class ServerController {
 		}
 		switch (conType) {
 		case "TCP":
-			new ServerConnection(port).run();
+			new Thread(new ServerConnection(port)).run();
 			break;
 		case "UDP":
 			break;

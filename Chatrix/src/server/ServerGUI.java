@@ -47,8 +47,7 @@ public class ServerGUI extends JFrame
 	JButton btnNewButton = new JButton("Start Server");
 	btnNewButton.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent arg0) {
-		    sc.createServer("TCP", false, 19819);
-		    
+		    sc.createServer("TCP", true, 18819);
 		}
 	});
 	btnNewButton.setBounds(43, 126, 91, 23);
