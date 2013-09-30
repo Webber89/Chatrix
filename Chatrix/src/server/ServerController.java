@@ -15,17 +15,18 @@ public class ServerController {
 
 	public void createServer(String conType, boolean isPrivate, int port) {
 		this.port = port;
-		switch (conType) {
-		case "TCP":
-			break;
-		case "UDP":
-			break;
-		}
 		try {
 			setIP(isPrivate);
 			broadcastIP();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		switch (conType) {
+		case "TCP":
+			new ServerConnection(port).run();
+			break;
+		case "UDP":
+			break;
 		}
 	}
 
