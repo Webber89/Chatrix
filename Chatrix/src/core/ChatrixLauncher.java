@@ -16,8 +16,8 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import server.Server;
-import client.Client;
+import server.ServerGUI;
+import client.ClientGUI;
 
 public class ChatrixLauncher
 {
@@ -83,7 +83,7 @@ public class ChatrixLauncher
 	    @Override
 	    public void mouseClicked(MouseEvent arg0)
 	    {
-		new Server();
+		new ServerGUI();
 		frame.dispose();
 	    }
 
@@ -132,7 +132,7 @@ public class ChatrixLauncher
 	    @Override
 	    public void mouseClicked(MouseEvent arg0)
 	    {
-		new Client();
+		new ClientGUI();
 		frame.dispose();
 	    }
 	});

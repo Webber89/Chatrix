@@ -10,7 +10,7 @@ import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 
 @SuppressWarnings("serial")
-public class Client extends JFrame
+public class ClientGUI extends JFrame
 {
 
     private JPanel contentPane;
@@ -23,7 +23,7 @@ public class Client extends JFrame
     /**
      * Create the frame.
      */
-    public Client()
+    public ClientGUI()
     {
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	setBounds(100, 100, 700, 400);
