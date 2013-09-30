@@ -102,7 +102,7 @@ public class ClientGUI extends JFrame
     }
     
     public void sendMsg(){
-		controller.send(inputField.getText());
+		controller.send(inputField.getText()+"\n");
 		inputField.setText("");
     	
     }
