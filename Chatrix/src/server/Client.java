@@ -9,7 +9,7 @@ import communication.TCPInputConnection;
 import communication.TCPOutputConnection;
 
 public class Client {
-	private Socket socket;
+	public Socket socket;
 	private InputConnection input;
 	public OutputConnection output;
 	

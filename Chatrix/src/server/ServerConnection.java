@@ -7,11 +7,9 @@ import java.net.Socket;
 
 public class ServerConnection implements Runnable {
 	private int port;
-	public String ip;
 	boolean running = true;
 
-	public ServerConnection(String ip, int port, boolean isPublic) {
-		this.ip = ip;
+	public ServerConnection(int port) {
 		this.port = port;
 	}
 
