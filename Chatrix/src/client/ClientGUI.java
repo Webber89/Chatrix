@@ -23,6 +23,7 @@ public class ClientGUI extends JFrame
 	private JTextArea msgWall;
 	JList<String> roomList;
 	JList<String> userList;
+	private ClientController controller = new ClientController("TCP");
 	
 	
     /**
@@ -101,7 +102,6 @@ public class ClientGUI extends JFrame
     }
     
     public void sendMsg(){
-		ClientController controller = new ClientController("TCP");
 		controller.send(inputField.getText());
 		inputField.setText("");
     	
