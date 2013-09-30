@@ -8,6 +8,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
@@ -27,7 +28,8 @@ public class ClientGUI extends JFrame
     /**
      * Create the frame.
      */
-    public ClientGUI()
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	public ClientGUI()
     {
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	setBounds(100, 100, 700, 400);
@@ -86,7 +88,7 @@ public class ClientGUI extends JFrame
 	roomList.add(new JLabel("Public"));
 	contentPane.add(roomList);
 	
-	JList<String> userList = new JList(users);
+	userList = new JList(users);
 	userList.setBounds(500, 216, 174, 126);
 	contentPane.add(userList);
 	setVisible(true);
@@ -99,16 +101,15 @@ public class ClientGUI extends JFrame
     }
     
     public void sendMsg(){
-//    	For testing - can be deleted:
-    	inputField.getText();
-		msgWall.append(inputField.getText()+"\n");
+		ClientController controller = new ClientController("TCP");
+		controller.send(inputField.getText());
 		inputField.setText("");
-//		*End of test section*
     	
     }
     
     public void joinRoom(){
-    	System.out.println(roomList.getComponent(roomList.getSelectedIndex()));
+    	System.out.println(roomList.getSelectedValue());
+    	//Call method in clientController which accepts a room, user session ID and 
     }
     
 }
