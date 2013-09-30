@@ -1,22 +1,25 @@
 package client;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import communication.InputConnection;
+import communication.OutputConnection;
 import communication.TCPInputConnection;
+import communication.TCPOutputConnection;
 
 public class ClientConnection {
 	private Socket socket;
-	private BufferedWriter writer;
+	private InputConnection input;
+	private OutputConnection output;
 
 	public ClientConnection(String ip, int port) {
 		try {
 			socket = new Socket(ip, port);
-			writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-			new Thread(new TCPInputConnection(socket)).start();
+			output = new TCPOutputConnection(socket);
+			input = new TCPInputConnection(socket);
+			new Thread(input).start();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -24,9 +27,12 @@ public class ClientConnection {
 		}
 	}
 
-	public void send(String content) throws IOException {
-		writer.write(content);
-		writer.flush();
+	public void send(String content) {
+		try {
+			output.send(content);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }
