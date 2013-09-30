@@ -25,6 +25,13 @@ public class ClientGUI extends JFrame
      */
     public ClientGUI()
     {
+    	try {
+			new ClientConnection().runClient();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.exit(0);
+		}
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	setBounds(100, 100, 700, 400);
 	contentPane = new JPanel();
