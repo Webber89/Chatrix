@@ -9,9 +9,7 @@ public class TCPInputConnection implements InputConnection {
 	private BufferedReader reader;
 	
 	public TCPInputConnection(Socket inputSocket) throws IOException {
-	    System.out.println("Reader will be created");
 	    reader = new BufferedReader(new InputStreamReader(inputSocket.getInputStream()));
-		System.out.println("Reader created");
 	}
 	
 	@Override
@@ -36,7 +34,6 @@ public class TCPInputConnection implements InputConnection {
 	public void run() {
 		try {
 			listen();
-			System.out.println("I was listening");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -13,9 +13,7 @@ public class TCPOutputConnection implements OutputConnection {
 	
 	public TCPOutputConnection(Socket clientSocket) throws UnknownHostException, IOException {
 		output = clientSocket.getOutputStream();
-		System.out.println("Got outputStream");
 		writer = new BufferedWriter(new OutputStreamWriter(output));
-		System.out.println("Got writer");
 	}
 
 	@Override
