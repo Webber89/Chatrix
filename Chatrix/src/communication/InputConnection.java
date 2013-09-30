@@ -2,6 +2,6 @@ package communication;
 
 import java.io.IOException;
 
-public interface InputConnection {
+public interface InputConnection extends Runnable {
 	public void listen() throws IOException;
 }
