@@ -11,17 +11,18 @@ import javax.swing.JToggleButton;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 @SuppressWarnings("serial")
 public class ServerGUI extends JFrame
 {
 
     private JPanel contentPane;
-    private final ButtonGroup buttonGroup = new ButtonGroup();
     private final ButtonGroup buttonGroup_1 = new ButtonGroup();
-    private final ButtonGroup buttonGroup_2 = new ButtonGroup();
     private JTextField textField;
     private final ButtonGroup buttonGroup_3 = new ButtonGroup();
+    ServerController sc = new ServerController();
 
     
     /**
@@ -44,6 +45,12 @@ public class ServerGUI extends JFrame
 	panel.setLayout(null);
 	
 	JButton btnNewButton = new JButton("Start Server");
+	btnNewButton.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent arg0) {
+		    sc.createServer("TCP", false, 19819);
+		    
+		}
+	});
 	btnNewButton.setBounds(43, 126, 91, 23);
 	panel.add(btnNewButton);
 	
