@@ -26,7 +26,7 @@ public class ServerConnection implements Runnable {
 			serverSocket = new ServerSocket(port);
 		while (running) {
 			Socket socket = serverSocket.accept();
-			new Client(socket).start();
+			new Client(socket).run();
 		}
 		serverSocket.close();
 		} catch (IOException e) {
