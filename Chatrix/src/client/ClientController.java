@@ -8,6 +8,7 @@ import java.util.StringTokenizer;
 public class ClientController {
 	private String ip;
 	private int port;
+	private ClientConnection connection;
 	
 	public ClientController(String conType) {
 		launchClient(conType);
@@ -16,12 +17,16 @@ public class ClientController {
 	public void launchClient(String conType) {
 		try {
 			getIP();
-			new ClientConnection(ip, port);
+			connection = new ClientConnection(ip, port);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	public void send(String message) {
+		connection.send(message);
+	}
+	
 	protected void getIP() throws Exception {
 		URL getLink = new URL(
 				"http://thebecw.appspot.com/spreadsheet?chat=true");
