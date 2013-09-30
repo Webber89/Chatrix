@@ -8,30 +8,27 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 @SuppressWarnings("serial")
 public class ClientGUI extends JFrame
 {
 
     private JPanel contentPane;
-
-    /**
-     * Launch the application.
-     */
-    
-
+	private JTextArea inputField;
+	private JTextArea msgWall;
+	JList<String> roomList;
+	JList<String> userList;
+	
+	
     /**
      * Create the frame.
      */
     public ClientGUI()
     {
-    	try {
-			new ClientConnection().runClient();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.exit(0);
-		}
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	setBounds(100, 100, 700, 400);
 	contentPane = new JPanel();
@@ -48,36 +45,70 @@ public class ClientGUI extends JFrame
 	lblUsers.setBounds(500, 191, 46, 14);
 	contentPane.add(lblUsers);
 	
-	JTextArea msgWall = new JTextArea();
+	msgWall = new JTextArea();
 	msgWall.setBounds(30, 50, 442, 213);
 	msgWall.setEditable(false);
 	msgWall.setWrapStyleWord(true);
 	msgWall.setLineWrap(true);
-	msgWall.setText("Line 1111111111111111111111111111111111111111111 med word wrap som det kan ses\nLine 2 \nLine 3 \r Return");
+	msgWall.append("Line 11111111111111111111\n");
 	contentPane.add(msgWall);
 	
-	JButton btnNewButton = new JButton("Send");
-	btnNewButton.setBounds(390, 274, 82, 76);
-	contentPane.add(btnNewButton);
 	
-	JTextArea textArea = new JTextArea();
-	textArea.setBounds(30, 274, 341, 76);
-	textArea.setWrapStyleWord(true);
-	textArea.setLineWrap(true);
-	contentPane.add(textArea);
+	inputField = new JTextArea();
+	inputField.setBounds(30, 274, 341, 76);
+	inputField.setWrapStyleWord(true);
+	inputField.setLineWrap(true);
+	contentPane.add(inputField);
+	
+	JButton sendButton = new JButton("Send");
+	sendButton.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent arg0) {
+			sendMsg();
+		}
+	});
+	sendButton.setBounds(390, 274, 82, 76);
+	contentPane.add(sendButton);
 	
 	String[] rooms = {"Public","Room 1"};
 	String[] users = {"Admin","User 1"};
 	
-	JList<String> roomList = new JList<String>(rooms);
+	roomList = new JList(rooms);
+	roomList.addMouseListener(new MouseAdapter() {
+		@Override
+		public void mousePressed(MouseEvent e) {
+			        if(e.getClickCount() >= 2){
+			           joinRoom();
+			            
+			        }
+		}
+	});
 	roomList.setBounds(500, 54, 174, 126);
 	roomList.add(new JLabel("Public"));
 	contentPane.add(roomList);
 	
-	JList<String> userList = new JList<String>(users);
+	JList<String> userList = new JList(users);
 	userList.setBounds(500, 216, 174, 126);
 	contentPane.add(userList);
 	setVisible(true);
 	
+//	testCon();
+	
     }
+    public void testCon(){
+    	new ClientController("TCP");
+    }
+    
+    public void sendMsg(){
+//    	For testing - can be deleted:
+    	inputField.getText();
+		msgWall.append(inputField.getText()+"\n");
+		inputField.setText("");
+//		*End of test section*
+    	
+    }
+    
+    public void joinRoom(){
+    	System.out.println(roomList.getComponent(roomList.getSelectedIndex()));
+    }
+    
 }
