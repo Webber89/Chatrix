@@ -8,6 +8,8 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
+import core.IllegalMessageException;
+
 public class Message
 {
     private LinkedHashMap<String, String> keyValuePairs = new LinkedHashMap<String, String>();
