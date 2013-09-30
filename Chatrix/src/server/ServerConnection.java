@@ -23,12 +23,10 @@ public class ServerConnection implements Runnable {
 		try {
 			serverSocket = new ServerSocket(port);
 		while (running) {
-		    System.out.println("Socket accepted");
+		    System.out.println("Waiting for new clients");
 			Socket socket = serverSocket.accept();
 			Client testClient = new Client(socket);
-			System.out.println("Created client");
 			testClient.output.send("Test \n");
-			System.out.println("Got a new client YAHOO");
 		}
 		serverSocket.close();
 		} catch (IOException e) {
