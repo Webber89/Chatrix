@@ -21,7 +21,7 @@ public class TCPInputConnection implements InputConnection {
 			}
 			try
 			{
-			    Thread.sleep(9999L);
+			    Thread.sleep(99L);
 			} catch (InterruptedException e)
 			{
 			    // TODO Auto-generated catch block
