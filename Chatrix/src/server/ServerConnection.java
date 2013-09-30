@@ -53,33 +53,40 @@ public class ServerConnection {
 	}
 
 	protected void broadcastIP() throws Exception {
+//	    	Contacting server with cancel param - server removes previous ip/port.
 		URL cancelLink = new URL("http://thebecw.appspot.com/updatelink?sae=chat&cancel=true");
 		BufferedReader in1 = new BufferedReader(new InputStreamReader(
-                cancelLink.openStream()));
+//              Creating stream to server
+		cancelLink.openStream()));
 		String cancelMsg = in1.readLine();
+//		Checking if msg is OK or prompt with errormsg
 		if (cancelMsg.equals("ok")) {
 		} else {
 			throw new Exception("Unable to cancel broadcast link");
 		}
-		
+//		Contacting server with params - setting the ip/port posted on server to the client using the updateLink
 		URL updateLink = new URL("http://thebecw.appspot.com/updatelink?sae=chat&link=" + ip + ":" + port);
 		BufferedReader in2 = new BufferedReader(new InputStreamReader(
-                updateLink.openStream()));
+//              Creating stream to server
+		updateLink.openStream()));
 		String linkMsg = in2.readLine();
+//		Checking if OK - else prompt errorMSG 
 		if (linkMsg.equals("ok")) {
 		} else {
 			throw new Exception("Unable to broadcast link");
 		}
-		
 		getIP();
 	}
 	
 	protected void getIP() throws Exception {
+//	    	Contacting server to retrieve stored ip/port
 		URL getLink = new URL("http://thebecw.appspot.com/spreadsheet?chat=true");
 		BufferedReader in3 = new BufferedReader(new InputStreamReader(getLink.openStream()));
 		String serverAddress = in3.readLine();
 		StringTokenizer tokenizer = new StringTokenizer(serverAddress, ":");
+//		reading first token before ":" seperator = the ip 
 		ip = tokenizer.nextToken();
+//		reading the port, which is the next token
 		port = Integer.parseInt(tokenizer.nextToken());
 		System.out.println(ip + ", " + port);
 	}
