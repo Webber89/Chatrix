@@ -18,7 +18,7 @@ public class Client {
 		try {
 			input = new TCPInputConnection(socket);
 			output = new TCPOutputConnection(socket);
-			new Thread(input).run();
+			new Thread(input).start();
 			System.out.println("input started");
 		} catch (IOException e) {
 			e.printStackTrace();
