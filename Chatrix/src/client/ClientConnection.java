@@ -1,48 +1,32 @@
 package client;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.net.URL;
-import java.util.StringTokenizer;
+import java.net.UnknownHostException;
+
+import communication.TCPInputConnection;
 
 public class ClientConnection {
-	private String serverIP;
-	private int serverPort;
+	private Socket socket;
+	private BufferedWriter writer;
 
-	public ClientConnection() {
-
+	public ClientConnection(String ip, int port) {
+		try {
+			socket = new Socket(ip, port);
+			writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+			new Thread(new TCPInputConnection(socket)).start();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
-	protected void runClient() throws Exception {
-		getIP();
-		Socket clientSocket = new Socket(serverIP, serverPort);
-		OutputStream outputStream = clientSocket.getOutputStream();
-		OutputStreamWriter outputWriter = new OutputStreamWriter(outputStream);
-		BufferedWriter bWriter = new BufferedWriter(outputWriter);
-		
-		InputStream inputStream = clientSocket.getInputStream();
-		InputStreamReader inputReader = new InputStreamReader(inputStream);
-		BufferedReader bReader = new BufferedReader(inputReader);
-		System.out.println(bReader.readLine());
-		bWriter.write("Random string\n");
-		bWriter.close();
-		clientSocket.close();
+	public void send(String content) throws IOException {
+		writer.write(content);
+		writer.flush();
 	}
-
-	protected void getIP() throws Exception {
-		URL getLink = new URL(
-				"http://thebecw.appspot.com/spreadsheet?chat=true");
-		BufferedReader in3 = new BufferedReader(new InputStreamReader(
-				getLink.openStream()));
-		String serverAddress = in3.readLine();
-		StringTokenizer tokenizer = new StringTokenizer(serverAddress, ":");
-		serverIP = tokenizer.nextToken();
-		serverPort = Integer.parseInt(tokenizer.nextToken());
-		System.out.println(serverIP + ", " + serverPort);
-	}
+	
 }
