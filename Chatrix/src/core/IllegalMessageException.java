@@ -1,4 +1,4 @@
-package server;
+package core;
 
 @SuppressWarnings("serial")
 public class IllegalMessageException extends Exception {
