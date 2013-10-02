@@ -105,6 +105,7 @@ public class ServerGUI extends JFrame
 	panel.add(tglbtnWan);
 
 	tglbtnPrivate = new JToggleButton("Local");
+	tglbtnPrivate.setSelected(true);
 	buttonGroup_3.add(tglbtnPrivate);
 	tglbtnPrivate.setBounds(185, 42, 68, 23);
 	panel.add(tglbtnPrivate);
