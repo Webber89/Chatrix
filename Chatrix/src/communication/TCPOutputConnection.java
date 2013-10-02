@@ -2,18 +2,15 @@ package communication;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class TCPOutputConnection implements OutputConnection {
-	private OutputStream output;
 	private BufferedWriter writer;
 	
 	public TCPOutputConnection(Socket clientSocket) throws UnknownHostException, IOException {
-		output = clientSocket.getOutputStream();
-		writer = new BufferedWriter(new OutputStreamWriter(output));
+		writer = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
 	}
 
 	@Override
@@ -29,5 +26,13 @@ public class TCPOutputConnection implements OutputConnection {
 	public void ping() {
 		// TODO ping
 	}
-
+	
+	public void closeConnection() {
+		try {
+			System.out.println("Closing outputstream writer ...");
+			writer.close();
+		} catch (IOException e) {
+			System.out.println("Failed to close writer.");
+		}
+	}
 }

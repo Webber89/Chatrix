@@ -9,6 +9,7 @@ public class ServerConnection implements Runnable {
 	public boolean running = true;
 	public Socket socket;
 	public ServerSocket serverSocket;
+	private Client testClient;
 
 	public ServerConnection(int port) {
 		this.port = port;
@@ -25,7 +26,7 @@ public class ServerConnection implements Runnable {
 			while (running) {
 				System.out.println("Waiting for new clients");
 				socket = serverSocket.accept();
-				Client testClient = new Client(socket);
+				testClient = new Client(socket);
 				testClient.output.send("Test \n");
 			}
 		} catch (IOException e) {
@@ -45,5 +46,11 @@ public class ServerConnection implements Runnable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void shutdown() throws IOException {
+		testClient.output.closeConnection();
+		serverSocket.close();
+		
 	}
 }
