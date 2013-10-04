@@ -6,6 +6,8 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import client.ClientConnection;
+
 public class TCPOutputConnection implements OutputConnection {
 	private BufferedWriter writer;
 	
@@ -16,9 +18,8 @@ public class TCPOutputConnection implements OutputConnection {
 	@Override
 	public void send(String content) throws IOException {
 		// TODO Håndtering af exceptions
-	    System.out.println("writing to client");
+	    System.out.println("Writing: " + content);
 		writer.write(content);
-		System.out.println("Wrote to client");
 		writer.flush();
 	}
 
@@ -34,5 +35,20 @@ public class TCPOutputConnection implements OutputConnection {
 		} catch (IOException e) {
 			System.out.println("Failed to close writer.");
 		}
+	}
+
+	@Override
+	public void sendAndLock(String content){
+		try {
+			ClientConnection.sem.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		try {
+			send(content);
+		} catch (IOException e) {
+			ClientConnection.sem.release();
+		}
+		
 	}
 }

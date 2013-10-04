@@ -19,7 +19,7 @@ public class ServerController {
 		this.port = port;
 		try {
 			setIP(isPrivate);
-			broadcastIP();
+			broadcastIP(conType);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -34,7 +34,7 @@ public class ServerController {
 		}
 	}
 
-	protected void broadcastIP() throws Exception {
+	protected void broadcastIP(String conType) throws Exception {
 		// Contacting server with cancel param - server removes previous
 		// ip/port.
 		URL cancelLink = new URL(
@@ -52,7 +52,7 @@ public class ServerController {
 		// to the client using the updateLink
 		URL updateLink = new URL(
 				"http://thebecw.appspot.com/updatelink?sae=chat&link=" + ip
-						+ ":" + port);
+						+ ":" + port + ":" + conType);
 		BufferedReader in2 = new BufferedReader(new InputStreamReader(
 		// Creating stream to server
 				updateLink.openStream()));

@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
+import client.ClientConnection;
+
 public class TCPInputConnection implements InputConnection {
 	private BufferedReader reader;
 	
@@ -17,14 +19,15 @@ public class TCPInputConnection implements InputConnection {
 		while (true) {
 			String inputString = reader.readLine();
 			if(inputString != null){
-			    System.out.println(inputString);			    
+			    ClientConnection.release();
+				System.out.println(inputString);
+			    
 			}
 			try
 			{
 			    Thread.sleep(99L);
 			} catch (InterruptedException e)
 			{
-			    // TODO Auto-generated catch block
 			    e.printStackTrace();
 			}
 		}

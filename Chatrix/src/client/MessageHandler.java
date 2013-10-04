@@ -6,7 +6,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
-import server.Message;
+import core.Message;
+
 
 public class MessageHandler {
 
