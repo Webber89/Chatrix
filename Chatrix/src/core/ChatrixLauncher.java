@@ -20,7 +20,6 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import server.ServerGUI;
 import client.ClientController;
-import client.ClientGUI;
 import client.ClientLogin;
 
 public class ChatrixLauncher
