@@ -13,13 +13,15 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import server.ServerGUI;
+import client.ClientController;
 import client.ClientGUI;
-import javax.swing.JLabel;
+import client.ClientLogin;
 
 public class ChatrixLauncher
 {
@@ -113,7 +115,8 @@ public class ChatrixLauncher
 	{
 	    public void actionPerformed(ActionEvent arg0)
 	    {
-		new ClientGUI();
+		ClientController controller = new ClientController();
+		new ClientLogin(controller);
 		frame.dispose();
 	    }
 	});

@@ -23,7 +23,7 @@ public class ClientGUI extends JFrame
 	private JTextArea msgWall;
 	JList<String> roomList;
 	JList<String> userList;
-	private ClientController controller = new ClientController("TCP");
+	private ClientController controller = new ClientController();
 	
 	
     /**
@@ -94,11 +94,6 @@ public class ClientGUI extends JFrame
 	contentPane.add(userList);
 	setVisible(true);
 	
-//	testCon();
-	
-    }
-    public void testCon(){
-    	new ClientController("TCP");
     }
     
     public void sendMsg(){
