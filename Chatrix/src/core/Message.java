@@ -47,12 +47,14 @@ public class Message {
 		// System.out.println(mappedJson);
 
 		// Converting from JSON to linked hashmap using Jackson's ObjectMapper
-		/**
-		 * @SuppressWarnings("unchecked") LinkedHashMap<String, Object> test =
-		 *                                new ObjectMapper().readValue(
-		 *                                mappedJson, LinkedHashMap.class);
-		 */
-		
+
 		return mappedJson;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static LinkedHashMap<String, String> parseJSON(String json)
+			throws JsonParseException, JsonMappingException, IOException {
+		return new ObjectMapper().readValue(json, LinkedHashMap.class);
+
 	}
 }
