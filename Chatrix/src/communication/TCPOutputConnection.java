@@ -6,8 +6,6 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import client.ClientConnection;
-
 public class TCPOutputConnection implements OutputConnection {
 	private BufferedWriter writer;
 	
@@ -37,18 +35,4 @@ public class TCPOutputConnection implements OutputConnection {
 		}
 	}
 
-	@Override
-	public void sendAndLock(String content){
-		try {
-			ClientConnection.sem.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		try {
-			send(content);
-		} catch (IOException e) {
-			ClientConnection.sem.release();
-		}
-		
-	}
 }

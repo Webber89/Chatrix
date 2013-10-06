@@ -19,7 +19,7 @@ public class ClientConnection {
 	private Socket socket;
 	private InputConnection input;
 	private OutputConnection output;
-	public static Semaphore sem = new Semaphore(1, true);
+	public static Semaphore sem = new Semaphore(0, true);
 
 	public ClientConnection(String ip, int port, String conType) {
 		try {
@@ -58,14 +58,18 @@ public class ClientConnection {
 		message.addKeyValue("user", user);
 		message.addKeyValue("pass", password);
 		try {
-			output.sendAndLock(message.toJson());
+			output.send(message.toJson());
+			sem.acquire();
 		} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
+			sem.release();
 			e.printStackTrace();
 		} catch (IllegalMessageException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 	}
