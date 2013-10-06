@@ -3,15 +3,16 @@ package communication;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.Socket;
 
-import client.ClientConnection;
+import core.MotherConnection;
 
 public class TCPInputConnection implements InputConnection {
 	private BufferedReader reader;
+	private MotherConnection connection;
 	
-	public TCPInputConnection(Socket inputSocket) throws IOException {
-	    reader = new BufferedReader(new InputStreamReader(inputSocket.getInputStream()));
+	public TCPInputConnection(MotherConnection connection) throws IOException {
+		this.connection = connection;
+	    reader = new BufferedReader(new InputStreamReader(connection.getSocket().getInputStream()));
 	}
 	
 	@Override
@@ -19,9 +20,7 @@ public class TCPInputConnection implements InputConnection {
 		while (true) {
 			String inputString = reader.readLine();
 			if(inputString != null){
-			    ClientConnection.release();
-				System.out.println(inputString);
-			    
+				connection.inputReceived(inputString);
 			}
 			try
 			{

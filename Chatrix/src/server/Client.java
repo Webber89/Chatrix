@@ -8,7 +8,9 @@ import communication.OutputConnection;
 import communication.TCPInputConnection;
 import communication.TCPOutputConnection;
 
-public class Client {
+import core.MotherConnection;
+
+public class Client implements MotherConnection {
 	public Socket socket;
 	private InputConnection input;
 	public OutputConnection output;
@@ -16,7 +18,7 @@ public class Client {
 	public Client(Socket socket) {
 		this.socket = socket;
 		try {
-			input = new TCPInputConnection(socket);
+			input = new TCPInputConnection(this);
 			output = new TCPOutputConnection(socket);
 			new Thread(input).start();
 			System.out.println("input started");
@@ -25,4 +27,14 @@ public class Client {
 		}
 	}
 
+	@Override
+	public Socket getSocket() {
+		return socket;
+	}
+
+	@Override
+	public void inputReceived(String input) {
+		System.out.println(input);
+	}
+	
 }

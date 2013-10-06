@@ -7,15 +7,16 @@ import java.util.concurrent.Semaphore;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-
 import communication.InputConnection;
 import communication.OutputConnection;
 import communication.TCPInputConnection;
 import communication.TCPOutputConnection;
+
 import core.IllegalMessageException;
 import core.Message;
+import core.MotherConnection;
 
-public class ClientConnection {
+public class ClientConnection implements MotherConnection {
 	private Socket socket;
 	private InputConnection input;
 	private OutputConnection output;
@@ -26,7 +27,7 @@ public class ClientConnection {
 			socket = new Socket(ip, port);
 			if (conType.equals("TCP")) {
 				output = new TCPOutputConnection(socket);
-				input = new TCPInputConnection(socket);
+				input = new TCPInputConnection(this);
 			} else {
 				// TODO implementér UDP
 				output = null;
@@ -77,6 +78,17 @@ public class ClientConnection {
 	public static void release() {
 		if (sem.availablePermits()==0)
 			sem.release();
+	}
+
+	@Override
+	public Socket getSocket() {
+		return socket;
+	}
+
+	@Override
+	public void inputReceived(String input) {
+		release();
+		System.out.println(input);
 	}
 
 }
