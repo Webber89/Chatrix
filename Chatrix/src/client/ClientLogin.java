@@ -61,6 +61,7 @@ public class ClientLogin
 		    try{
 			controller.login(textField.getText(),new String (passwordField.getPassword()));
 			new ClientGUI(controller);
+			frame.dispose();
 		    }		
 		    catch(ConnectException ce){
 			statusLbl.setText("Connection error..");

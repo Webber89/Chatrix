@@ -50,7 +50,6 @@ public class ClientGUI extends JFrame {
 		msgWall.setEditable(false);
 		msgWall.setWrapStyleWord(true);
 		msgWall.setLineWrap(true);
-		msgWall.append("Line 11111111111111111111\n");
 		contentPane.add(msgWall);
 
 		inputField = new JTextArea();
@@ -93,7 +92,8 @@ public class ClientGUI extends JFrame {
 	}
 
 	public void sendMsg() {
-		controller.send(inputField.getText() + "\n");
+		controller.send(inputField.getText());
+		msgWall.append(inputField.getText()+"\n");
 		inputField.setText("");
 	}
 
