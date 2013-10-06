@@ -60,7 +60,7 @@ public class ClientLogin
 		    statusLbl.setText("Logging in..");
 		    try{
 			controller.login(textField.getText(),new String (passwordField.getPassword()));
-			new ClientGUI();
+			new ClientGUI(controller);
 		    }		
 		    catch(ConnectException ce){
 			statusLbl.setText("Connection error..");
