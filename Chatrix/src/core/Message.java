@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Message {
 	private LinkedHashMap<String, String> keyValuePairs = new LinkedHashMap<String, String>();
-	private Type type;
+	public Type type;
 	// Map of all Types
 	private static final Map<String, Type> typeMap;
 	// Statically initialises map
@@ -25,8 +25,8 @@ public class Message {
 		MESSAGE("MSG", 2), JOIN("JOIN", 2), ENTER("ENT", 1), QUIT("QUIT", 0), CREATE(
 				"CRT", 2), INFO("INFO", 0), INVITE("INV", 2);
 
-		String type;
-		int minParams;
+		public String type;
+		public int minParams;
 
 		Type(String type, int minParams) {
 			this.type = type;

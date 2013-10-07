@@ -2,15 +2,14 @@ package server;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.LinkedHashMap;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-
 import communication.InputConnection;
 import communication.OutputConnection;
 import communication.TCPInputConnection;
 import communication.TCPOutputConnection;
+
 import core.Message;
 import core.MotherConnection;
 
@@ -18,7 +17,7 @@ public class Client implements MotherConnection {
 	public Socket socket;
 	private InputConnection input;
 	public OutputConnection output;
-	private LinkedHashMap<String, String> message;
+	private Message message;
 
 	public Client(Socket socket) {
 		this.socket = socket;
@@ -41,19 +40,16 @@ public class Client implements MotherConnection {
 	public void inputReceived(String input) {
 		System.out.println(input);
 		try {
-			message = Message.parseJSON(input);
-			for (String s : message.keySet()) {
-				System.out.println(s + ": " + message.get(s));
-			}
+			message = Message.parseJSONtoMessage(input);
 		} catch (JsonParseException | JsonMappingException e) {
-			// TODO Auto-generated catch block
+			// TODO Handle invalid JSON
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			// TODO Handle connection failure
 			e.printStackTrace();
 		}
 
-		switch (message.get(0)) {
+		switch (message.type.type) {
 
 		case "MESSAGE":
 			// msg(message);
