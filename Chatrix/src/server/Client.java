@@ -18,7 +18,8 @@ public class Client implements MotherConnection {
 	public Socket socket;
 	private InputConnection input;
 	public OutputConnection output;
-	
+	private LinkedHashMap<String, String> message;
+
 	public Client(Socket socket) {
 		this.socket = socket;
 		try {
@@ -38,8 +39,9 @@ public class Client implements MotherConnection {
 
 	@Override
 	public void inputReceived(String input) {
+		System.out.println(input);
 		try {
-			LinkedHashMap<String, String> message = Message.parseJSON(input);
+			message = Message.parseJSON(input);
 			for (String s : message.keySet()) {
 				System.out.println(s + ": " + message.get(s));
 			}
@@ -50,7 +52,31 @@ public class Client implements MotherConnection {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println(input);
+
+		switch (message.get(0)) {
+
+		case "MESSAGE":
+			// msg(message);
+			break;
+		case "JOIN":
+			// join(message);
+			break;
+		case "ENTER":
+			// enter(message);
+			break;
+		case "QUIT":
+			// quit(message);
+			break;
+		case "CREATE":
+			// create(message);
+			break;
+		case "INFO":
+			// info(message);
+			break;
+		case "Invite":
+			// invite(message);
+			break;
+		}
 	}
-	
+
 }
