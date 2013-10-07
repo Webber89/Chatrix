@@ -29,7 +29,7 @@ public class ServerConnection implements Runnable {
 				System.out.println("Waiting for new clients");
 				socket = serverSocket.accept();
 				testClient = new Client(socket);
-				testClient.output.send("Test \n");
+//				testClient.output.send("Test \n");
 			}
 		} catch (IOException e) {
 			System.out.println("ServerConnection interrupted");

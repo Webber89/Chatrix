@@ -1,18 +1,29 @@
 package server;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.StringTokenizer;
+
+import core.Message;
 
 public class ServerController {
 	private int port;
 	public String ip;
 	private ServerConnection serverCon;
 	private Thread serverThread;
+	private static HashMap<String, String> users = new HashMap<String, String>();
 
 	public ServerController() {
+		loadUserList();
 	}
 
 	public void createServer(String conType, boolean isPrivate, int port) {
@@ -95,9 +106,59 @@ public class ServerController {
 		try {
 			System.out.println("Stopping server");
 			serverCon.shutdown();
-//			serverSocket.close();
+			// serverSocket.close();
 		} catch (Exception e) {
 			System.out.println("Failed to stop server");
+		}
+	}
+
+	public static Message login(Message message) {
+		String user = message.keyValuePairs.get("user");
+		String pass = message.keyValuePairs.get("pass");
+		Message returnMessage = new Message(Message.Type.JOIN);
+		if (users.containsKey("user")) {
+			if (users.get(user).equals(pass)) {
+				returnMessage.addKeyValue("success", "true");
+				returnMessage.addKeyValue("created", "false");
+			} else {
+				returnMessage.addKeyValue("success", "false");
+				returnMessage.addKeyValue("created", "false");
+			}
+		} else {
+			users.put(user, pass);
+			returnMessage.addKeyValue("success", "true");
+			returnMessage.addKeyValue("created", "true");
+			saveUserList();
+		}
+		return returnMessage;
+	}
+
+	@SuppressWarnings("unchecked")
+	private static void loadUserList() {
+		ObjectInputStream in;
+		try {
+			in = new ObjectInputStream(new FileInputStream("/userlist.dat"));
+			users = (HashMap<String, String>) in.readObject();
+		} catch (FileNotFoundException e) {
+			System.out.println("Userlist does not exist");
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	private static void saveUserList() {
+		ObjectOutputStream out;
+		try {
+			out = new ObjectOutputStream(new FileOutputStream("/userlist.dat"));
+			out.writeObject(users);
+			out.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }

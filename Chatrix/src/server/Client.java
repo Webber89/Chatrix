@@ -10,6 +10,7 @@ import communication.OutputConnection;
 import communication.TCPInputConnection;
 import communication.TCPOutputConnection;
 
+import core.IllegalMessageException;
 import core.Message;
 import core.MotherConnection;
 
@@ -55,7 +56,18 @@ public class Client implements MotherConnection {
 			// msg(message);
 			break;
 		case "JOIN":
-			// join(message);
+			Message returnMessage = ServerController.login(message);
+			try {
+				System.out.println(returnMessage.toJson());
+			} catch (JsonParseException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (IllegalMessageException e) {
+				e.printStackTrace();
+			}
 			break;
 		case "ENTER":
 			// enter(message);
@@ -69,7 +81,7 @@ public class Client implements MotherConnection {
 		case "INFO":
 			// info(message);
 			break;
-		case "Invite":
+		case "INVITE":
 			// invite(message);
 			break;
 		}

@@ -18,7 +18,7 @@ public class TCPOutputConnection implements OutputConnection {
 		writer.flush();
 		// TODO Håndtering af exceptions
 	    System.out.println("Writing: " + content);
-		writer.write(content);
+		writer.write(content + "\n");
 //		closeConnection();
 	}
 

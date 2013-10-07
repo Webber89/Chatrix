@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Message {
-	private LinkedHashMap<String, String> keyValuePairs = new LinkedHashMap<String, String>();
+	public LinkedHashMap<String, String> keyValuePairs = new LinkedHashMap<String, String>();
 	public Type type;
 	// Map of all Types
 	private static final Map<String, Type> typeMap;
