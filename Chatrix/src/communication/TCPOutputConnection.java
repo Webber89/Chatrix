@@ -15,10 +15,10 @@ public class TCPOutputConnection implements OutputConnection {
 
 	@Override
 	public void send(String content) throws IOException {
-		writer.flush();
 		// TODO Håndtering af exceptions
 	    System.out.println("Writing: " + content);
 		writer.write(content + "\n");
+		writer.flush();
 //		closeConnection();
 	}
 

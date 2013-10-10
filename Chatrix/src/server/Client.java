@@ -39,7 +39,7 @@ public class Client implements MotherConnection {
 
 	@Override
 	public void inputReceived(String input) {
-		System.out.println(input);
+		System.out.println("Message received: " + input);
 		try {
 			message = Message.parseJSONtoMessage(input);
 		} catch (JsonParseException | JsonMappingException e) {
@@ -59,9 +59,7 @@ public class Client implements MotherConnection {
 			Message returnMessage = ServerController.login(message);
 			try {
 				System.out.println(returnMessage.toJson());
-			} catch (JsonParseException e) {
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
+			} catch (JsonParseException | JsonMappingException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();

@@ -1,6 +1,7 @@
 package server;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -10,6 +11,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
@@ -21,6 +23,8 @@ public class ServerController {
 	private ServerConnection serverCon;
 	private Thread serverThread;
 	private static HashMap<String, String> users = new HashMap<String, String>();
+	private static File userListFile = new File(System.getProperty("user.dir")
+			+ "/userlist.dat");
 
 	public ServerController() {
 		loadUserList();
@@ -46,12 +50,12 @@ public class ServerController {
 	}
 
 	protected void broadcastIP(String conType) throws Exception {
+		try {
 		// Contacting server with cancel param - server removes previous
 		// ip/port.
 		URL cancelLink = new URL(
 				"http://thebecw.appspot.com/updatelink?sae=chat&cancel=true");
 		BufferedReader in1 = new BufferedReader(new InputStreamReader(
-		// Creating stream to server
 				cancelLink.openStream()));
 		String cancelMsg = in1.readLine();
 		// Checking if msg is OK or prompt with errormsg
@@ -72,6 +76,11 @@ public class ServerController {
 		if (linkMsg.equals("ok")) {
 		} else {
 			throw new Exception("Unable to broadcast link");
+		}
+		} catch (UnknownHostException e) {
+			Thread.sleep(500);
+			System.out.println("Failed to access appspot, trying again ...");
+			broadcastIP(conType);
 		}
 		getIP();
 	}
@@ -116,7 +125,7 @@ public class ServerController {
 		String user = message.keyValuePairs.get("user");
 		String pass = message.keyValuePairs.get("pass");
 		Message returnMessage = new Message(Message.Type.JOIN);
-		if (users.containsKey("user")) {
+		if (users.containsKey(user)) {
 			if (users.get(user).equals(pass)) {
 				returnMessage.addKeyValue("success", "true");
 				returnMessage.addKeyValue("created", "false");
@@ -137,8 +146,10 @@ public class ServerController {
 	private static void loadUserList() {
 		ObjectInputStream in;
 		try {
-			in = new ObjectInputStream(new FileInputStream("/userlist.dat"));
+			in = new ObjectInputStream(new FileInputStream(userListFile));
 			users = (HashMap<String, String>) in.readObject();
+			for (String s : users.keySet())
+				System.out.println("User: " + s);
 		} catch (FileNotFoundException e) {
 			System.out.println("Userlist does not exist");
 		} catch (IOException e) {
@@ -148,11 +159,12 @@ public class ServerController {
 		}
 
 	}
-	
+
 	private static void saveUserList() {
 		ObjectOutputStream out;
 		try {
-			out = new ObjectOutputStream(new FileOutputStream("/userlist.dat"));
+			userListFile.createNewFile();
+			out = new ObjectOutputStream(new FileOutputStream(userListFile));
 			out.writeObject(users);
 			out.close();
 		} catch (FileNotFoundException e) {
