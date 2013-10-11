@@ -41,15 +41,6 @@ public class ServerConnection implements Runnable {
 		}
 	}
 
-	public void testMessage() {
-		Message message = new Message(Message.Type.JOIN);
-		try {
-			System.out.println(message.toJson());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	public void shutdown() throws IOException {
 		testClient.output.closeConnection();
 		serverSocket.close();

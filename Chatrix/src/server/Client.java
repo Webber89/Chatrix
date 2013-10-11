@@ -53,12 +53,14 @@ public class Client implements MotherConnection {
 		switch (message.type.type) {
 
 		case "MESSAGE":
-			// msg(message);
-			break;
+		    Message receivedMessage = ServerController.sendMessage(message);
+		    
+		    
+		    break;
 		case "JOIN":
 			Message returnMessage = ServerController.login(message);
 			try {
-				System.out.println(returnMessage.toJson());
+				output.send(returnMessage.toJson());
 			} catch (JsonParseException | JsonMappingException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
