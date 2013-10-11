@@ -19,7 +19,6 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import server.ServerGUI;
-import client.ClientController;
 import client.ClientLogin;
 
 public class ChatrixLauncher
@@ -114,8 +113,7 @@ public class ChatrixLauncher
 	{
 	    public void actionPerformed(ActionEvent arg0)
 	    {
-		ClientController controller = new ClientController();
-		new ClientLogin(controller);
+		new ClientLogin();
 		frame.dispose();
 	    }
 	});

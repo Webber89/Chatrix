@@ -2,21 +2,24 @@ package client;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.net.ConnectException;
 import java.net.URL;
 import java.util.StringTokenizer;
 
 public class ClientController {
+	private static ClientController instance = new ClientController();
 	private String ip;
 	private int port;
 	private ClientConnection connection;
 	private String conType;
 	private String user;
 
-	public ClientController() {
+	private ClientController() {
 		launchClient();
 	}
-
+	
+	public static ClientController getInstance() {
+		return instance;
+	}
 	public void launchClient() {
 		try {
 			getIP();
@@ -43,10 +46,13 @@ public class ClientController {
 		System.out.println(ip + ", " + port + ", " + conType);
 	}
 
-	public void login(String user, String password) throws ConnectException,
-			IllegalArgumentException {
+	public void login(String user, String password) {
 		this.user = user;
+		try {
 		connection.login(user, password);
+		} catch (Exception e) {
+			
+		}
 		// TODO handle login
 	}
 }

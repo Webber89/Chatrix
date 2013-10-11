@@ -2,7 +2,6 @@ package client;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.ConnectException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -12,18 +11,17 @@ import javax.swing.JTextField;
 
 public class ClientLogin {
 
-	private JFrame frame;
+	private static JFrame frame;
 	private JTextField textField;
 	private JPasswordField passwordField;
-	private ClientController controller;
-	private JLabel statusLbl;
+	private static ClientController controller = ClientController.getInstance();
+	private static JLabel statusLbl;
 	private JButton btnRegister;
 
 	/**
 	 * Create the application.
 	 */
-	public ClientLogin(ClientController controller) {
-		this.controller = controller;
+	public ClientLogin() {
 		initialize();
 		frame.setVisible(true);
 	}
@@ -55,17 +53,8 @@ public class ClientLogin {
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				statusLbl.setText("Logging in..");
-				try {
 					controller.login(textField.getText(), new String(
 							passwordField.getPassword()));
-					new ClientGUI(controller);
-					frame.dispose();
-				} catch (ConnectException ce) {
-					statusLbl.setText("Connection error..");
-				} catch (IllegalArgumentException ia) {
-					statusLbl
-							.setText("Invalid credentials - please try again..");
-				}
 			}
 		});
 		btnLogin.setBounds(97, 109, 89, 23);
@@ -83,4 +72,13 @@ public class ClientLogin {
 		btnRegister.setBounds(100, 143, 89, 23);
 		frame.getContentPane().add(btnRegister);
 	}
+	
+		public static void startClient() {
+			new ClientGUI(controller);
+			frame.dispose();
+		}
+		
+		public static void showErrorMessage(String message) {
+			statusLbl.setText(message);
+		}
 }
