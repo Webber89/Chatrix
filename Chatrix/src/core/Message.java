@@ -95,4 +95,8 @@ public class Message {
 		message.keyValuePairs = map;
 		return message;
 	}
+	
+	public String getValue(String key) {
+		return keyValuePairs.get(key);
+	}
 }

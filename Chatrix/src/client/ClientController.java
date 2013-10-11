@@ -5,6 +5,8 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.StringTokenizer;
 
+import core.Message;
+
 public class ClientController {
 	private static ClientController instance = new ClientController();
 	private String ip;
@@ -12,6 +14,7 @@ public class ClientController {
 	private ClientConnection connection;
 	private String conType;
 	private String user;
+	private String token;
 
 	private ClientController() {
 		launchClient();
@@ -51,8 +54,18 @@ public class ClientController {
 		try {
 		connection.login(user, password);
 		} catch (Exception e) {
-			
+			ClientLogin.showErrorMessage(e.getMessage());
 		}
-		// TODO handle login
+	}
+	
+	public void handleLogin(Message message) {
+		if (Boolean.parseBoolean(message.getValue("success"))) {
+			token = message.getValue("token");
+			System.out.println(token);
+			ClientLogin.startClient();
+		} else {
+			ClientLogin.showErrorMessage(message.getValue("message"));
+		}
+		
 	}
 }

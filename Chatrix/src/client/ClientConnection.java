@@ -3,7 +3,6 @@ package client;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.concurrent.Semaphore;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -20,7 +19,6 @@ public class ClientConnection implements MotherConnection {
 	private Socket socket;
 	private InputConnection input;
 	private OutputConnection output;
-	public static Semaphore sem = new Semaphore(0, true);
 
 	public ClientConnection(String ip, int port, String conType) {
 		try {
@@ -60,24 +58,15 @@ public class ClientConnection implements MotherConnection {
 		message.addKeyValue("pass", password);
 		try {
 			output.send(message.toJson());
-			sem.acquire();
 		} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			sem.release();
 			e.printStackTrace();
 		} catch (IllegalMessageException e) {
 			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
 		}
-	}
-
-	public static void release() {
-		if (sem.availablePermits()==0)
-			sem.release();
 	}
 
 	@Override
@@ -87,8 +76,22 @@ public class ClientConnection implements MotherConnection {
 
 	@Override
 	public void inputReceived(String input) {
-		release();
-		System.out.println(input);
+		try {
+			Message message = Message.parseJSONtoMessage(input);
+			switch (message.type.type) {
+			case "SJOIN":
+				ClientController.getInstance().handleLogin(message);
+				break;
+			default:
+				System.out.println(input);
+			}
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
