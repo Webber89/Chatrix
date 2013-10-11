@@ -43,7 +43,7 @@ public class ClientConnection implements MotherConnection {
 
 	public void sendMessage(String content, String user) {
 		try {
-			Message message = new Message(Message.Type.MESSAGE);
+			Message message = new Message(Message.Type.CLIENT_MESSAGE);
 			message.addKeyValue("user", user);
 			message.addKeyValue("message", content);
 			output.send(message.toJson());
@@ -55,7 +55,7 @@ public class ClientConnection implements MotherConnection {
 	}
 
 	public void login(String user, String password) {
-		Message message = new Message(Message.Type.JOIN);
+		Message message = new Message(Message.Type.CLIENT_JOIN);
 		message.addKeyValue("user", user);
 		message.addKeyValue("pass", password);
 		try {
