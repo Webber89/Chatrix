@@ -121,6 +121,12 @@ public class ServerController {
 		}
 	}
 
+	public static Message sendMessage(Message message) {
+	    
+	    return message;
+	    
+	}
+	
 	public static Message login(Message message) {
 		String user = message.keyValuePairs.get("user");
 		String pass = message.keyValuePairs.get("pass");
