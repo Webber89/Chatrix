@@ -20,10 +20,15 @@ public class Message {
 		for (Type t : Type.values())
 			typeMap.put(t.type, t);
 	}
-	
+
 	public enum Type {
-		MESSAGE("MSG", 2), JOIN("JOIN", 2), ENTER("ENT", 1), QUIT("QUIT", 0), CREATE(
-				"CRT", 2), INFO("INFO", 0), INVITE("INV", 2);
+		CLIENT_MESSAGE("CMSG", 3), SERVER_MESSAGE("SMSG", 4), 
+		CLIENT_JOIN("CJOIN", 2), SERVER_JOIN("SJOIN", 2), 
+		ENTER("ENT", 2), LEAVE("LEA", 1),
+		CLIENT_CREATE("CCRT", 2), SERVER_CREATE("SCRT", 2),
+		CLIENT_INFO("CINFO", 1), SERVER_INFO("SINFO", 2),
+		ROOM_INFO("RINFO", 2), CLIENT_INVITE("CINV", 3),
+		SERVER_INVITE("SINV", 2);
 
 		public String type;
 		public int minParams;
@@ -42,7 +47,7 @@ public class Message {
 		this.type = type;
 		keyValuePairs.put("type", this.type.type);
 	}
-	
+
 	public Message(String type) {
 		this.type = getMessageTypeByName(type);
 		keyValuePairs.put("type", this.type.type);
@@ -72,16 +77,19 @@ public class Message {
 		return new ObjectMapper().readValue(json, LinkedHashMap.class);
 
 	}
-	
+
 	public static Message.Type getMessageTypeByName(String name) {
 		return typeMap.get(name);
 	}
-	
-	public static Message parseJSONtoMessage(String json) throws JsonParseException, JsonMappingException, IOException {
+
+	public static Message parseJSONtoMessage(String json)
+			throws JsonParseException, JsonMappingException, IOException {
 		// Converts JSON string to HashMap
 		@SuppressWarnings("unchecked")
-		LinkedHashMap<String, String> map = new ObjectMapper().readValue(json, LinkedHashMap.class);
-		// Removes "type" key-value from map and uses returned value to initialise message
+		LinkedHashMap<String, String> map = new ObjectMapper().readValue(json,
+				LinkedHashMap.class);
+		// Removes "type" key-value from map and uses returned value to
+		// initialise message
 		Message message = new Message(map.remove("type"));
 		// Sets message map as the remaining map contents
 		message.keyValuePairs = map;
