@@ -5,11 +5,11 @@ import java.net.Socket;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+
 import communication.InputConnection;
 import communication.OutputConnection;
 import communication.TCPInputConnection;
 import communication.TCPOutputConnection;
-
 import core.IllegalMessageException;
 import core.Message;
 import core.MotherConnection;
@@ -53,7 +53,8 @@ public class Client implements MotherConnection {
 		switch (message.type.type) {
 
 		case "MESSAGE":
-		    Message receivedMessage = ServerController.sendMessage(message);
+		    @SuppressWarnings("unused")
+			Message receivedMessage = ServerController.sendMessage(message);
 		    
 		    
 		    break;

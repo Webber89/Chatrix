@@ -191,7 +191,8 @@ public class ServerController
 
     }
 
-    private static void saveUserList()
+    @SuppressWarnings("unused")
+	private static void saveUserList()
     {
 	ObjectOutputStream out;
 	try

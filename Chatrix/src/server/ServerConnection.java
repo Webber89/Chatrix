@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import core.Message;
-
 public class ServerConnection implements Runnable {
 	private int port;
 	public boolean running = true;
