@@ -1,5 +1,11 @@
 package client;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -7,11 +13,6 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 @SuppressWarnings("serial")
 public class ClientGUI extends JFrame {
@@ -22,6 +23,8 @@ public class ClientGUI extends JFrame {
 	JList<String> roomList;
 	JList<String> userList;
 	private ClientController controller;
+	private DefaultListModel<String> userListModel;
+	private DefaultListModel<String> roomListModel;
 
 	/**
 	 * Create the frame.
@@ -67,10 +70,8 @@ public class ClientGUI extends JFrame {
 		sendButton.setBounds(390, 274, 82, 76);
 		contentPane.add(sendButton);
 
-		String[] rooms = { "Public", "Room 1" };
-		String[] users = { "Admin", "User 1" };
-
-		roomList = new JList(rooms);
+		roomListModel = new DefaultListModel();
+		roomList = new JList(roomListModel);
 		roomList.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -83,8 +84,9 @@ public class ClientGUI extends JFrame {
 		roomList.setBounds(500, 54, 174, 126);
 		roomList.add(new JLabel("Public"));
 		contentPane.add(roomList);
-
-		userList = new JList(users);
+		
+		userListModel = new DefaultListModel();
+		userList = new JList(userListModel);
 		userList.setBounds(500, 216, 174, 126);
 		contentPane.add(userList);
 		setVisible(true);
@@ -101,6 +103,17 @@ public class ClientGUI extends JFrame {
 		System.out.println(roomList.getSelectedValue());
 		// Call method in clientController which accepts a room, user session ID
 		// and
+	}
+	
+	public void updateUsers(ArrayList<String> users){
+	    for(String s : users){
+		userListModel.addElement(s);
+            }
+	}
+	public void updateRooms(ArrayList<String> rooms){
+	    for(String s : rooms){
+		roomListModel.addElement(s);
+            }
 	}
 
 }

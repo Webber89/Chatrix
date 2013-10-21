@@ -3,8 +3,8 @@ package client;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.StringTokenizer;
-
 import core.Message;
 
 public class ClientController {
@@ -15,6 +15,7 @@ public class ClientController {
 	private String conType;
 	private String user;
 	private String token;
+	private HashMap<String,Room> rooms = new HashMap<String,Room>();
 
 	private ClientController() {
 		launchClient();
@@ -67,5 +68,19 @@ public class ClientController {
 			ClientLogin.showErrorMessage(message.getValue("message"));
 		}
 		
+	}
+
+	public void handleJoinRoom(Message message)
+	{
+	    if(rooms.get(message.getValue("roomName"))==null){
+		rooms.put(message.getValue("roomName"), new Room(message.getValue("roomName")));
+	    }
+	    
+//	    rooms.get(message.getValue("roomName")).updateUserList(message.toArrayList);
+	    
+	    
+	    
+	    // TODO Auto-generated method stub
+	    
 	}
 }
