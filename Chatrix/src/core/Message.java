@@ -1,11 +1,14 @@
 package core;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -14,6 +17,7 @@ public class Message {
 	public Type type;
 	// Map of all Types
 	private static final Map<String, Type> typeMap;
+	private static final ObjectMapper mapper = new ObjectMapper();
 	// Statically initialises map
 	static {
 		typeMap = new HashMap<String, Type>();
@@ -86,7 +90,7 @@ public class Message {
 			throws JsonParseException, JsonMappingException, IOException {
 		// Converts JSON string to HashMap
 		@SuppressWarnings("unchecked")
-		LinkedHashMap<String, String> map = new ObjectMapper().readValue(json,
+		LinkedHashMap<String, String> map = mapper.readValue(json,
 				LinkedHashMap.class);
 		// Removes "type" key-value from map and uses returned value to
 		// initialise message
@@ -98,5 +102,20 @@ public class Message {
 	
 	public String getValue(String key) {
 		return keyValuePairs.get(key);
+	}
+	
+	public static String writeValueAsString(String[] strings) {
+		try {
+			return mapper.writeValueAsString(strings);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public static List<String> toArrayList(String json) throws JsonParseException, JsonMappingException, IOException {
+		String[] strings = mapper.readValue(json, String[].class);
+		List<String> stringList = Arrays.asList(strings);
+		return stringList;
 	}
 }

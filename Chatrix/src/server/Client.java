@@ -5,11 +5,11 @@ import java.net.Socket;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-
 import communication.InputConnection;
 import communication.OutputConnection;
 import communication.TCPInputConnection;
 import communication.TCPOutputConnection;
+
 import core.IllegalMessageException;
 import core.Message;
 import core.MotherConnection;
@@ -19,6 +19,8 @@ public class Client implements MotherConnection {
 	private InputConnection input;
 	public OutputConnection output;
 	private Message message;
+	private String token;
+	private String name;
 
 	public Client(Socket socket) {
 		this.socket = socket;
@@ -43,7 +45,6 @@ public class Client implements MotherConnection {
 		try {
 			message = Message.parseJSONtoMessage(input);
 		} catch (JsonParseException | JsonMappingException e) {
-			// TODO Handle invalid JSON
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Handle connection failure
@@ -52,15 +53,19 @@ public class Client implements MotherConnection {
 
 		switch (message.type.type) {
 
-		case "MESSAGE":
+		case "CMSG":
 		    @SuppressWarnings("unused")
 			Message receivedMessage = ServerController.sendMessage(message);
 		    
 		    
 		    break;
-		case "JOIN":
-			Message returnMessage = ServerController.login(message);
+		case "CJOIN":
+			setName(message.getValue("user"));
+			Message returnMessage = ServerController.login(message, this);
 			try {
+				if (Boolean.parseBoolean(returnMessage.getValue("success"))) {
+					setToken(returnMessage.getValue("token"));
+				}
 				output.send(returnMessage.toJson());
 			} catch (JsonParseException | JsonMappingException e) {
 				e.printStackTrace();
@@ -70,22 +75,54 @@ public class Client implements MotherConnection {
 				e.printStackTrace();
 			}
 			break;
-		case "ENTER":
+		case "ENT":
 			// enter(message);
 			break;
-		case "QUIT":
+		case "LEA":
 			// quit(message);
 			break;
-		case "CREATE":
+		case "CCRT":
 			// create(message);
 			break;
-		case "INFO":
+		case "CINFO":
 			// info(message);
 			break;
-		case "INVITE":
+		case "CINV":
 			// invite(message);
 			break;
 		}
 	}
 
+
+	public void refreshUserList(String roomName, String[] strings) {
+		Message message = new Message(Message.Type.ROOM_INFO);
+		message.addKeyValue("roomName", roomName);
+		message.addKeyValue("users", Message.writeValueAsString(strings));
+		
+		try {
+			output.send(message.toJson());
+		} catch (JsonParseException | JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (IllegalMessageException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+	
+	public String getToken() {
+		return token;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
+	}
 }
