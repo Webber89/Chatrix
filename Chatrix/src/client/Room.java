@@ -19,6 +19,7 @@ public class Room
 	this.userList = users;
 	ClientGUI.getInstance().updateUsers(userList);
     }
+
 }
 
 

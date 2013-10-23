@@ -34,8 +34,8 @@ public class ClientController {
 		}
 	}
 
-	public void send(String message) {
-		connection.sendMessage(message, user);
+	public void send(String room, String message) {
+		connection.sendMessage(room, message, token);
 	}
 
 	protected void getIP() throws Exception {
@@ -77,6 +77,7 @@ public class ClientController {
 	    if(!rooms.containsKey(message.getValue("roomName"))){
 		System.out.println(message.getValue("roomName"));
 		rooms.put(message.getValue("roomName"), temp = new Room(message.getValue("roomName")));
+		ClientGUI.getInstance().updateRooms(rooms.keySet());
 	    }
 	    else{
 		temp = rooms.get(message.getValue("roomName"));
@@ -89,5 +90,18 @@ public class ClientController {
 		e.printStackTrace();
 	    } 
 	    
+	}
+
+	public void handleServerInfo(Message message)
+	{
+	    
+	}
+
+	public void handleMessage(Message message)
+	{
+	    if(rooms.containsKey(message.getValue("roomName"))){
+//		rooms.get(message.getValue("roomName")).postMessage(message);
+		ClientGUI.getInstance().AddMessage(message.getValue("user"),message.getValue("message"),message.getValue("timestamp"));
+	    }
 	}
 }

@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Collection;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -27,6 +28,7 @@ public class ClientGUI extends JFrame
     JList<String> userList;
     private DefaultListModel<String> userListModel;
     private DefaultListModel<String> roomListModel;
+    
 
     /**
      * Create the frame.
@@ -68,6 +70,7 @@ public class ClientGUI extends JFrame
 	{
 	    public void actionPerformed(ActionEvent arg0)
 	    {
+		
 		sendMsg();
 	    }
 	});
@@ -102,8 +105,13 @@ public class ClientGUI extends JFrame
 
     public void sendMsg()
     {
-	ClientController.getInstance().send(inputField.getText());
-	msgWall.append(inputField.getText() + "\n");
+	
+	if(roomList.getSelectedValue()== null){
+	    roomList.setSelectedIndex(0);
+	}
+	String currentRoom = roomList.getSelectedValue();
+	ClientController.getInstance().send(currentRoom, inputField.getText());
+//	msgWall.append(inputField.getText() + "\n");
 	inputField.setText("");
     }
 
@@ -123,7 +131,7 @@ public class ClientGUI extends JFrame
 	}
     }
 
-    public void updateRooms(List<String> rooms)
+    public void updateRooms(Collection<String> rooms)
     {
 	roomListModel.removeAllElements();
 	for (String s : rooms)
@@ -135,6 +143,11 @@ public class ClientGUI extends JFrame
     public static ClientGUI getInstance()
     {
 	return gui;
+    }
+
+    public void AddMessage(String user, String message, String timestamp)
+    {
+	msgWall.append("("+timestamp+") "+user+" says: "+message);
     }
 
 }

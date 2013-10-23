@@ -46,12 +46,13 @@ public class ClientConnection implements MotherConnection
 	}
     }
 
-    public void sendMessage(String content, String user)
+    public void sendMessage(String room, String content, String token)
     {
 	try
 	{
 	    Message message = new Message(Message.Type.CLIENT_MESSAGE);
-	    message.addKeyValue("user", user);
+	    message.addKeyValue("roomName", room);
+	    message.addKeyValue("token", token);
 	    message.addKeyValue("message", content);
 	    output.send(message.toJson());
 	} catch (IOException e)
@@ -109,9 +110,16 @@ public class ClientConnection implements MotherConnection
 		break;
 
 	    case "SINFO":
-
+		ClientController.getInstance().handleServerInfo(message);
 		// TODO server sends rooms
-
+		break;
+	    case "SMSG":
+		ClientController.getInstance().handleMessage(message);
+		//TODO receive and present message
+		break;
+		
+	
+		
 	    default:
 		System.out.println(input);
 	    }
