@@ -47,7 +47,7 @@ public class Room {
 	public void broadcastMessage(Message message) {
 		Message returnMessage = new Message(Message.Type.SERVER_MESSAGE);
 		returnMessage.addKeyValue("roomName", roomName);
-		returnMessage.addKeyValue("user", message.getValue("user"));
+		returnMessage.addKeyValue("user",userList.get(message.getValue("token")).getName());
 		returnMessage.addKeyValue("message", message.getValue("message"));
 		returnMessage.addKeyValue("timestamp", getTime());
 		for (Client c : userList.values()) {

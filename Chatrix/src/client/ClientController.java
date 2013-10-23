@@ -14,6 +14,7 @@ public class ClientController {
 	private int port;
 	private ClientConnection connection;
 	private String conType;
+	@SuppressWarnings("unused")
 	private String user;
 	private String token;
 	private HashMap<String,Room> rooms = new HashMap<String,Room>();
