@@ -24,7 +24,6 @@ public class ServerConnection implements Runnable {
 		try {
 			serverSocket = new ServerSocket(port);
 			while (running) {
-				System.out.println("Waiting for new clients");
 				socket = serverSocket.accept();
 				testClient = new Client(socket);
 //				testClient.output.send("Test \n");
