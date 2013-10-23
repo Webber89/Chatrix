@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.StringTokenizer;
+
 import core.Message;
 
 public class ClientController {
@@ -72,15 +73,21 @@ public class ClientController {
 
 	public void handleJoinRoom(Message message)
 	{
-	    if(rooms.get(message.getValue("roomName"))==null){
-		rooms.put(message.getValue("roomName"), new Room(message.getValue("roomName")));
+	    Room temp;
+	    if(!rooms.containsKey(message.getValue("roomName"))){
+		System.out.println(message.getValue("roomName"));
+		rooms.put(message.getValue("roomName"), temp = new Room(message.getValue("roomName")));
 	    }
-	    
-//	    rooms.get(message.getValue("roomName")).updateUserList(message.toArrayList);
-	    
-	    
-	    
-	    // TODO Auto-generated method stub
+	    else{
+		temp = rooms.get(message.getValue("roomName"));
+	    }
+	    try
+	    {
+		temp.updateUserList(Message.toArrayList(message.getValue("users")));
+	    } catch (Exception e)
+	    {
+		e.printStackTrace();
+	    } 
 	    
 	}
 }

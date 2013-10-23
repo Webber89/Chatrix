@@ -50,18 +50,20 @@ public class ClientLogin {
 		textField.setColumns(10);
 
 		JButton btnLogin = new JButton("Login");
+		
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				statusLbl.setText("Logging in..");
-					controller.login(textField.getText(), new String(
-							passwordField.getPassword()));
+			    login();
 			}
 		});
 		btnLogin.setBounds(97, 109, 89, 23);
 		frame.getContentPane().add(btnLogin);
 
+		frame.getRootPane().setDefaultButton(btnLogin);
+		
 		passwordField = new JPasswordField();
 		passwordField.setBounds(100, 78, 86, 20);
+		
 		frame.getContentPane().add(passwordField);
 
 		statusLbl = new JLabel("Please enter credentials");
@@ -74,11 +76,16 @@ public class ClientLogin {
 	}
 	
 		public static void startClient() {
-			new ClientGUI(controller);
+			ClientGUI.getInstance();
 			frame.dispose();
 		}
 		
 		public static void showErrorMessage(String message) {
 			statusLbl.setText(message);
+		}
+		public void login(){
+		    statusLbl.setText("Logging in..");
+			controller.login(textField.getText(), new String(
+					passwordField.getPassword()));
 		}
 }

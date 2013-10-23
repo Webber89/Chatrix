@@ -1,27 +1,21 @@
 package client;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Room
 {
-    private String roomName;
-    private ArrayList<String> userList = new ArrayList<String>();
-
-    public Room()
-    {
-    }
+    public String roomName;
+    private List<String> userList = new ArrayList<String>();
 
     public Room(String roomName)
     {
 	this.roomName = roomName;
-	
     }
 
-    public void updateUserList(ArrayList<String> users){
+    public void updateUserList(List<String> users){
 	
 	this.userList = users;
-//	userList.put(msg.getValue("users"));
-//	TODO update userlist of the room.
-	
+	ClientGUI.getInstance().updateUsers(userList);
     }
 }
