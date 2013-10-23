@@ -38,7 +38,7 @@ public class TCPInputConnection implements InputConnection {
 			listen();
 		} catch (IOException e) {
 			System.out.println("TCPInputConnection interrupted");
-//			e.printStackTrace();
+			connection.lostConnection();
 		}
 	}
 

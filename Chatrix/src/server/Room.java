@@ -27,5 +27,12 @@ public class Room
     	userList.put(c.getToken(), c);
     	refreshUserList();
     }
+
+	public void removeClient(Client client) {
+		if (userList.containsKey(client.getName())) {
+			userList.remove(client.getName());
+			refreshUserList();
+		}
+	}
     
 }

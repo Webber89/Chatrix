@@ -65,8 +65,11 @@ public class Client implements MotherConnection {
 			try {
 				if (Boolean.parseBoolean(returnMessage.getValue("success"))) {
 					setToken(returnMessage.getValue("token"));
+					output.send(returnMessage.toJson());
+					ServerController.joinRoom("public", this);
+				} else {
+					output.send(returnMessage.toJson());
 				}
-				output.send(returnMessage.toJson());
 			} catch (JsonParseException | JsonMappingException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -124,5 +127,10 @@ public class Client implements MotherConnection {
 
 	public String getName() {
 		return name;
+	}
+
+	@Override
+	public void lostConnection() {
+		ServerController.removeClient(this);
 	}
 }

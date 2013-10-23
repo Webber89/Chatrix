@@ -139,7 +139,6 @@ public class ServerController {
 			if (users.get(user).equals(pass)) {
 				returnMessage.addKeyValue("success", "true");
 				returnMessage.addKeyValue("token", generateToken());
-				rooms.get("public").addClient(c);
 				return returnMessage;
 			}
 		}
@@ -182,6 +181,16 @@ public class ServerController {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	public static void joinRoom(String roomName, Client c) {
+		rooms.get(roomName).addClient(c);
+	}
+
+	public static void removeClient(Client client) {
+		for (Room r : rooms.values()) {
+			r.removeClient(client);
 		}
 	}
 }
