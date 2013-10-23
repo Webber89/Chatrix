@@ -26,12 +26,18 @@ public class Message {
 	}
 
 	public enum Type {
-		CLIENT_MESSAGE("CMSG", 3), SERVER_MESSAGE("SMSG", 4), 
-		CLIENT_JOIN("CJOIN", 2), SERVER_JOIN("SJOIN", 2), 
-		ENTER("ENT", 2), LEAVE("LEA", 1),
-		CLIENT_CREATE("CCRT", 2), SERVER_CREATE("SCRT", 2),
-		CLIENT_INFO("CINFO", 1), SERVER_INFO("SINFO", 2),
-		ROOM_INFO("RINFO", 2), CLIENT_INVITE("CINV", 3),
+		CLIENT_MESSAGE("CMSG", 3), // token, roomName, message
+		SERVER_MESSAGE("SMSG", 4), // roomName, user, message, timestamp
+		CLIENT_JOIN("CJOIN", 2), // user, pass
+		SERVER_JOIN("SJOIN", 2), // success, token/message
+		ENTER("ENT", 2), // token, roomName
+		LEAVE("LEA", 2), // token, roomName
+		CLIENT_CREATE("CCRT", 2), // token, roomName
+		SERVER_CREATE("SCRT", 2), // success, roomName/message
+		CLIENT_INFO("CINFO", 1), // token
+		SERVER_INFO("SINFO", 2), // rooms
+		ROOM_INFO("RINFO", 2), // roomName, users
+		CLIENT_INVITE("CINV", 3),
 		SERVER_INVITE("SINV", 2);
 
 		public String type;

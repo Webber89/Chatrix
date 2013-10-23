@@ -125,10 +125,8 @@ public class ServerController {
 		}
 	}
 
-	public static Message sendMessage(Message message) {
-
-		return message;
-
+	public static void receivedMessage(Message message) {
+		rooms.get(message.getValue("roomName")).broadcastMessage(message);
 	}
 
 	public static Message login(Message message, Client c) {

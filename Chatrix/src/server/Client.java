@@ -54,10 +54,7 @@ public class Client implements MotherConnection {
 		switch (message.type.type) {
 
 		case "CMSG":
-		    @SuppressWarnings("unused")
-			Message receivedMessage = ServerController.sendMessage(message);
-		    
-		    
+			ServerController.receivedMessage(message);
 		    break;
 		case "CJOIN":
 			setName(message.getValue("user"));
