@@ -127,4 +127,10 @@ public class ClientConnection implements MotherConnection
 	}
     }
 
+	@Override
+	public void lostConnection() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
