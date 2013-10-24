@@ -133,6 +133,7 @@ public class ServerController {
 		String user = message.keyValuePairs.get("user");
 		String pass = message.keyValuePairs.get("pass");
 		Message returnMessage = new Message(Message.Type.SERVER_JOIN);
+		
 		if (users.containsKey(user)) {
 			if (users.get(user).equals(pass)) {
 				returnMessage.addKeyValue("success", "true");

@@ -3,13 +3,14 @@ package server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class ServerConnection implements Runnable {
 	private int port;
 	public boolean running = true;
 	public Socket socket;
 	public ServerSocket serverSocket;
-	private Client testClient;
+	private ArrayList<Client> clientList = new ArrayList<Client>();
 
 	public ServerConnection(int port) {
 		this.port = port;
@@ -25,21 +26,23 @@ public class ServerConnection implements Runnable {
 			serverSocket = new ServerSocket(port);
 			while (running) {
 				socket = serverSocket.accept();
-				testClient = new Client(socket);
+				clientList.add(new Client(socket));
 //				testClient.output.send("Test \n");
 			}
 		} catch (IOException e) {
 			System.out.println("ServerConnection interrupted");
 		} finally {
 			try {
-				socket.close();
+				serverSocket.close();
 			} catch (IOException e) {
 			}
 		}
 	}
 
 	public void shutdown() throws IOException {
-		testClient.output.closeConnection();
+		for (Client c : clientList)
+			c.output.closeConnection();
+		System.out.println("Closing server socket");
 		serverSocket.close();
 		
 	}

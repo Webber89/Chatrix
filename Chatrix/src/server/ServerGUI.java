@@ -1,18 +1,19 @@
 package server;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JToggleButton;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JTextField;
 import javax.swing.JLabel;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JToggleButton;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
 
 @SuppressWarnings("serial")
 public class ServerGUI extends JFrame
@@ -48,7 +49,7 @@ public class ServerGUI extends JFrame
 	contentPane.add(panel);
 	panel.setLayout(null);
 
-	JButton btnNewButton = new JButton("Start Server");
+	final JButton btnNewButton = new JButton("Start Server");
 	btnNewButton.addActionListener(new ActionListener()
 	{
 	    public void actionPerformed(ActionEvent arg0)
@@ -66,6 +67,7 @@ public class ServerGUI extends JFrame
 		sc.createServer(conType, isPrivate,
 			Integer.parseInt(textField.getText()));
 		btnStop.setEnabled(true);
+		getRootPane().setDefaultButton(btnStop);
 	    }
 	});
 	btnNewButton.setBounds(10, 126, 109, 23);
@@ -115,10 +117,18 @@ public class ServerGUI extends JFrame
 	btnStop.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 		    sc.stopServer();
+		    getRootPane().setDefaultButton(btnNewButton);
 		}
 	});
 	btnStop.setBounds(129, 126, 124, 23);
 	panel.add(btnStop);
+	SwingUtilities.invokeLater(new Runnable() {
+	     @Override
+	     public void run() {
+	         textField.requestFocusInWindow();
+	     }
+	 });
 	setVisible(true);
+	getRootPane().setDefaultButton(btnNewButton);
     }
 }
