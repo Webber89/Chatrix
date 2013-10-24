@@ -1,10 +1,7 @@
 package client;
 
-import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Collection;
@@ -16,7 +13,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.DefaultCaret;
 
@@ -25,7 +25,7 @@ public class ClientGUI extends JFrame {
 
 	private static ClientGUI gui = new ClientGUI();
 	private JPanel contentPane;
-	private JTextArea inputField;
+	private JTextField inputField;
 	private JTextArea msgWall;
 	JList<String> roomList;
 	JList<String> userList;
@@ -38,6 +38,11 @@ public class ClientGUI extends JFrame {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private ClientGUI() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		try {
+		    UIManager.setLookAndFeel("ch.randelshofer.quaqua.QuaquaLookAndFeel");
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
 		setBounds(100, 100, 700, 400);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -46,30 +51,26 @@ public class ClientGUI extends JFrame {
 		contentPane.setLayout(null);
 
 		JLabel lblRooms = new JLabel("Rooms");
-		lblRooms.setBounds(500, 25, 46, 14);
+		lblRooms.setBounds(500, 25, 76, 14);
 		contentPane.add(lblRooms);
 
 		JLabel lblUsers = new JLabel("Users");
-		lblUsers.setBounds(500, 191, 46, 14);
+		lblUsers.setBounds(500, 191, 76, 14);
 		contentPane.add(lblUsers);
 
 		msgWall = new JTextArea();
 		DefaultCaret caret = (DefaultCaret)msgWall.getCaret();
 		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-		msgWall.setBounds(30, 50, 442, 213);
 		msgWall.setEditable(false);
 		msgWall.setWrapStyleWord(true);
 		msgWall.setLineWrap(true);
-		ScrollPane scroll = new ScrollPane();
+		JScrollPane scroll = new JScrollPane(msgWall);
+		scroll.setBounds(10, 10, 462, 258);
 		scroll.setWheelScrollingEnabled(true);
-		scroll.setBounds(0, 0, 472, 268);
-		scroll.add(msgWall);
 		contentPane.add(scroll);
 
-		inputField = new JTextArea();
-		inputField.setBounds(30, 274, 341, 76);
-		inputField.setWrapStyleWord(true);
-		inputField.setLineWrap(true);
+		inputField = new JTextField();
+		inputField.setBounds(10, 274, 361, 76);
 		contentPane.add(inputField);
 
 		JButton sendButton = new JButton("Send");
