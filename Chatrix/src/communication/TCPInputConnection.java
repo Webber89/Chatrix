@@ -12,7 +12,6 @@ public class TCPInputConnection implements InputConnection {
 	
 	public TCPInputConnection(MotherConnection connection) throws IOException {
 		this.connection = connection;
-		connection.getSocket().setSoTimeout(500);
 	    reader = new BufferedReader(new InputStreamReader(connection.getSocket().getInputStream()));
 	}
 	
@@ -20,15 +19,9 @@ public class TCPInputConnection implements InputConnection {
 	public void listen() throws IOException {
 		while (true) {
 			String inputString = reader.readLine();
-			if(inputString != null){
+			if (inputString.equals("ping"));
+			else if(inputString != null){
 				connection.inputReceived(inputString);
-			}
-			try
-			{
-			    Thread.sleep(99L);
-			} catch (InterruptedException e)
-			{
-			    e.printStackTrace();
 			}
 		}
 	}
