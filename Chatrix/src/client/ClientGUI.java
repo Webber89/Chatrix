@@ -1,7 +1,10 @@
 package client;
 
+import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Collection;
@@ -15,6 +18,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.DefaultCaret;
 
 @SuppressWarnings("serial")
 public class ClientGUI extends JFrame {
@@ -50,11 +54,17 @@ public class ClientGUI extends JFrame {
 		contentPane.add(lblUsers);
 
 		msgWall = new JTextArea();
+		DefaultCaret caret = (DefaultCaret)msgWall.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		msgWall.setBounds(30, 50, 442, 213);
 		msgWall.setEditable(false);
 		msgWall.setWrapStyleWord(true);
 		msgWall.setLineWrap(true);
-		contentPane.add(msgWall);
+		ScrollPane scroll = new ScrollPane();
+		scroll.setWheelScrollingEnabled(true);
+		scroll.setBounds(0, 0, 472, 268);
+		scroll.add(msgWall);
+		contentPane.add(scroll);
 
 		inputField = new JTextArea();
 		inputField.setBounds(30, 274, 341, 76);
@@ -132,6 +142,7 @@ public class ClientGUI extends JFrame {
 	}
 
 	public void AddMessage(String user, String message, String timestamp) {
+		msgWall.setCaretPosition(msgWall.getDocument().getLength());
 		msgWall.append("(" + timestamp + ") " + user + " says: " + message
 				+ "\n");
 	}
