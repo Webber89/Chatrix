@@ -42,7 +42,6 @@ public class ServerConnection implements Runnable {
 	public void shutdown() throws IOException {
 		for (Client c : clientList)
 			c.output.closeConnection();
-		System.out.println("Closing server socket");
 		serverSocket.close();
 		
 	}
