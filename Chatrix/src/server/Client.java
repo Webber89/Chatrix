@@ -44,20 +44,18 @@ public class Client implements MotherConnection {
 		System.out.println("Message received: " + input);
 		try {
 			message = Message.parseJSONtoMessage(input);
-		} catch (JsonParseException | JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Handle connection failure
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		switch (message.type.type) {
-
 		case "CMSG":
 			ServerController.receivedMessage(message);
 		    break;
 		case "CJOIN":
 			setName(message.getValue("user"));
+			
+			// TODO flyt logik over til ServerController
 			Message returnMessage = ServerController.login(message, this);
 			try {
 				if (Boolean.parseBoolean(returnMessage.getValue("success"))) {
