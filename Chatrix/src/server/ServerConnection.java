@@ -31,10 +31,9 @@ public class ServerConnection implements Runnable {
 			}
 		} catch (IOException e) {
 			System.out.println("ServerConnection interrupted");
-		} finally {
 			try {
 				serverSocket.close();
-			} catch (IOException e) {
+			} catch (NullPointerException | IOException ex) {
 			}
 		}
 	}
@@ -43,7 +42,10 @@ public class ServerConnection implements Runnable {
 		for (Client c : clientList)
 			c.output.closeConnection();
 		serverSocket.close();
-		
+	}
+	
+	public ArrayList<Client> getClientList() {
+		return clientList;
 	}
 
 }

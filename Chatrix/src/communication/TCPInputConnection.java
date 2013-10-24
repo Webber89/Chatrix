@@ -12,6 +12,7 @@ public class TCPInputConnection implements InputConnection {
 	
 	public TCPInputConnection(MotherConnection connection) throws IOException {
 		this.connection = connection;
+		connection.getSocket().setSoTimeout(500);
 	    reader = new BufferedReader(new InputStreamReader(connection.getSocket().getInputStream()));
 	}
 	

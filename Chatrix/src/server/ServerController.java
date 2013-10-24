@@ -21,9 +21,10 @@ import core.Message;
 public class ServerController {
 	private int port;
 	public String ip;
-	private ServerConnection serverCon;
+	private static ServerConnection serverCon;
 	private Thread serverThread;
 	private static HashMap<String, String> users = new HashMap<String, String>();
+	private static HashMap<String, Client> activeUsers = new HashMap<String, Client>();
 	private static File userListFile = new File(System.getProperty("user.dir")
 			+ "/userlist.dat");
 	private static HashMap<String, Room> rooms = new HashMap<String, Room>();
@@ -133,9 +134,16 @@ public class ServerController {
 		String user = message.keyValuePairs.get("user");
 		String pass = message.keyValuePairs.get("pass");
 		Message returnMessage = new Message(Message.Type.SERVER_JOIN);
-		
+		for (Client cl : activeUsers.values()) {
+			if (cl.getName().equals(user)) {
+				returnMessage.addKeyValue("success", "false");
+				returnMessage.addKeyValue("message", "User already logged in");
+				return returnMessage;
+			}
+		}
 		if (users.containsKey(user)) {
 			if (users.get(user).equals(pass)) {
+				activeUsers.put(user, c);
 				returnMessage.addKeyValue("success", "true");
 				returnMessage.addKeyValue("token", generateToken());
 				return returnMessage;
@@ -191,5 +199,6 @@ public class ServerController {
 		for (Room r : rooms.values()) {
 			r.removeClient(client);
 		}
+		serverCon.getClientList().remove(client);
 	}
 }
