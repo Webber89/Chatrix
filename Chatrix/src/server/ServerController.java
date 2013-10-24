@@ -12,6 +12,7 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 import java.util.UUID;
@@ -200,5 +201,9 @@ public class ServerController {
 			r.removeClient(client);
 		}
 		serverCon.getClientList().remove(client);
+	}
+	
+	public static Collection<Client> getActiveUsers() {
+		return activeUsers.values();
 	}
 }

@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import server.Client;
+import server.ServerController;
+
 import core.Message;
 
 public class BatchSender {
@@ -29,20 +32,40 @@ public class BatchSender {
 		
 	}
 	
-	private BatchSender() {}
+	private BatchSender() {
+		new Thread(new Pinger()).start();
+	}
 		
 	public void submit(OutputConnection out, Message message) {
 		try {
-			threadPool.submit(new MessageTask(out, message.toJson()));
+			submit(out, message.toJson());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void submit(OutputConnection out, String message) {
+		threadPool.submit(new MessageTask(out, message));
 	}
 	
 	public static BatchSender getInstance() {
 		return instance;
 	}
 	
+	class Pinger implements Runnable {
+
+		@Override
+		public void run() {
+			for (Client c : ServerController.getActiveUsers())
+				submit(c.output, "ping");
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
 	
 	
 }
