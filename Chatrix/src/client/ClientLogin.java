@@ -8,7 +8,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import javax.swing.UIManager;
 
 public class ClientLogin {
 
@@ -37,12 +36,6 @@ public class ClientLogin {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 
-		try {
-		    UIManager.setLookAndFeel("ch.randelshofer.quaqua.QuaquaLookAndFeel");
-		} catch (Exception e) {
-		    e.printStackTrace();
-		}
-		
 		JLabel lblUser = new JLabel("User");
 		lblUser.setBounds(29, 49, 59, 14);
 		frame.getContentPane().add(lblUser);
