@@ -65,11 +65,21 @@ public class Client implements MotherConnection {
 				} else {
 					output.send(returnMessage.toJson());
 				}
-			} catch (JsonParseException | JsonMappingException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (IllegalMessageException e) {
+			}
+			break;
+		case "REG":
+			Message returnMessage2 = ServerController.register(message, this);
+			try {
+				if (Boolean.parseBoolean(returnMessage2.getValue("success"))) {
+					setToken(returnMessage2.getValue("token"));
+					output.send(returnMessage2.toJson());
+					ServerController.joinRoom("public", this);
+				} else {
+					output.send(returnMessage2.toJson());
+				}
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			break;
