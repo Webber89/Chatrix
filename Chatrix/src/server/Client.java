@@ -70,6 +70,8 @@ public class Client implements MotherConnection {
 			}
 			break;
 		case "REG":
+			setName(message.getValue("user"));
+			
 			Message returnMessage2 = ServerController.register(message, this);
 			try {
 				if (Boolean.parseBoolean(returnMessage2.getValue("success"))) {
