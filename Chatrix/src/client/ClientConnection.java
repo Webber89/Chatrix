@@ -3,6 +3,13 @@ package client;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -20,6 +27,12 @@ public class ClientConnection implements MotherConnection
     private Socket socket;
     private InputConnection input;
     private OutputConnection output;
+    ExecutorService pingService = Executors.newFixedThreadPool(1);
+    private volatile boolean gotPing = false;
+    private Semaphore sem = new Semaphore(1);
+    private String ip;
+    private int port;
+    private String conType;
 
     public ClientConnection()
     {
@@ -87,7 +100,6 @@ public class ClientConnection implements MotherConnection
 		ClientController.getInstance().handleMessage(message);
 		// TODO receive and present message
 		break;
-
 	    default:
 		System.out.println(input);
 	    }
@@ -106,8 +118,9 @@ public class ClientConnection implements MotherConnection
     @Override
     public void lostConnection()
     {
-	// TODO Auto-generated method stub
-
+	System.out.println("Lost connection");
+	input.setInactive();
+	ClientController.getInstance().lostConnection();
     }
 
     public void register(String user, String pass)
@@ -125,21 +138,132 @@ public class ClientConnection implements MotherConnection
 	}
 
     }
-    
-    public void connect(String ip, int port, String conType) throws UnknownHostException, IOException{
-	
+
+    public void connect(String ip, int port, String conType)
+	    throws UnknownHostException, IOException
+    {
+	this.ip = ip;
+	this.port = port;
+	this.conType = conType;
+	connect();
+    }
+
+    private void connect() throws UnknownHostException, IOException
+    {
 	socket = new Socket(ip, port);
-	    if (conType.equals("TCP"))
+	if (conType.equals("TCP"))
+	{
+	    output = new TCPOutputConnection(socket);
+	    input = new TCPInputConnection(this);
+	} else
+	{
+	    // TODO implementér UDP
+	    output = null;
+	    input = null;
+	}
+	new Thread(input).start();
+    }
+
+    public void ping()
+    {
+	pingService.submit(new Callable<Object>()
+	{
+
+	    @Override
+	    public Object call()
 	    {
-		output = new TCPOutputConnection(socket);
-		input = new TCPInputConnection(this);
+		try
+		{
+		    sem.release();
+		    gotPing = false;
+		    System.out.println("gotPing = false");
+		    Thread.sleep(500);
+		    output.send("ping");
+		    Thread.sleep(500);
+		    if (!gotPing)
+		    {
+			lostConnection();
+		    }
+
+		} catch (Exception e)
+		{
+		    e.printStackTrace();
+		}
+		return null;
+	    }
+	});
+
+    }
+
+    @Override
+    public void gotPing()
+    {
+	gotPing = true;
+	try
+	{
+	    if (sem.availablePermits() == 0)
+	    {
+		System.out.println("too many pings");
 	    } else
 	    {
-		// TODO implementér UDP
-		output = null;
-		input = null;
+		sem.acquire();
+		ping();
 	    }
-	    new Thread(input).start();
+	} catch (InterruptedException e)
+	{
+	    e.printStackTrace();
+	}
+    }
+
+    public void reconnect() throws IOException
+    {
+	socket.close();
+	boolean isReconnected = false;
+	long delay = 1;
+	ExecutorService reconnectService = Executors.newFixedThreadPool(1);
+	while (!isReconnected)
+	{
+	    System.out.println("Trying to connect in " + delay);
+	    Future<Boolean> futureSuccess = reconnectService
+		    .submit(new Callable<Boolean>()
+		    {
+
+			@Override
+			public Boolean call() throws Exception
+			{
+			    System.out.println("Attempting call");
+			    try
+			    {
+				connect();
+				System.out.println("succesfull connect");
+				return true;
+			    } catch (Exception e)
+			    {
+				e.printStackTrace();
+				return false;
+			    }
+			}
+		    });
+	    try
+	    {
+		isReconnected = futureSuccess.get(delay++, TimeUnit.SECONDS);
+		reconnectService.shutdownNow();
+		ClientController.getInstance().regainedConnection();
+	    } 
+	    catch(TimeoutException e2){
+		System.out.println("Timed out delay: " +delay);
+	    }
+	    catch (Exception e)
+	    {
+	    e.printStackTrace();
+	    }
+	    finally {
+		System.out.println("Finally");
+		System.out.println(futureSuccess.cancel(true));
+	    }
+	    
+	}
+
     }
 
 }

@@ -1,5 +1,6 @@
 package client;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -36,6 +37,7 @@ public class ClientGUI extends JFrame
     JList<String> userList;
     private DefaultListModel<String> userListModel;
     private DefaultListModel<String> roomListModel;
+    private JButton sendButton;
 
     /**
      * Create the frame.
@@ -82,7 +84,7 @@ public class ClientGUI extends JFrame
 	inputField.setBounds(10, 274, 361, 76);
 	contentPane.add(inputField);
 
-	JButton sendButton = new JButton("Send");
+	sendButton = new JButton("Send");
 	sendButton.addActionListener(new ActionListener()
 	{
 	    public void actionPerformed(ActionEvent arg0)
@@ -172,9 +174,6 @@ public class ClientGUI extends JFrame
     public void addMessage(String user, String message, String timestamp)
     {
 	msgWall.setCaretPosition(msgWall.getDocument().getLength());
-	StyledDocument doc = (StyledDocument) msgWall.getDocument();
-	Style style = doc.addStyle("styleName", null);
-	StyleConstants.setBold(style,true);
 	try
 	{
 	    msgWall.getDocument().insertString(msgWall.getDocument().getLength(), "(" + timestamp + ") " + user + " says: " + message
@@ -188,6 +187,27 @@ public class ClientGUI extends JFrame
 //	append("(<font color=green" + timestamp + "</font>) " + user + " says: " + message
 //		
 //		+ "\n");
+    }
+
+    public void lostConnection()
+    {
+	sendButton.setEnabled(false);
+	StyledDocument doc = (StyledDocument) msgWall.getDocument();
+	Style style = doc.addStyle("styleName", null);
+	StyleConstants.setBold(style,true);
+	style.addAttribute(StyleConstants.Foreground, Color.RED);
+	try
+	{
+	    msgWall.getDocument().insertString(msgWall.getDocument().getLength(),"Connection lost - trying to reconnect\n", style);
+	} catch (BadLocationException e)
+	{
+	    System.out.println(e.getMessage());
+	}
+    }
+
+    public void reconnected()
+    {
+	sendButton.setEnabled(true);
     }
     
 }

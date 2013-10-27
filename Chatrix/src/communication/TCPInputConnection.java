@@ -9,6 +9,7 @@ import core.MotherConnection;
 public class TCPInputConnection implements InputConnection {
 	private BufferedReader reader;
 	private MotherConnection connection;
+	private volatile boolean isActive = true;
 	
 	public TCPInputConnection(MotherConnection connection) throws IOException {
 		this.connection = connection;
@@ -17,9 +18,12 @@ public class TCPInputConnection implements InputConnection {
 	
 	@Override
 	public void listen() throws IOException {
-		while (true) {
+		while (isActive) {
 			String inputString = reader.readLine();
-			if (inputString.equals("ping"));
+			if (inputString.equals("ping")){
+			    connection.gotPing();
+			}
+			
 			else if(inputString != null){
 				connection.inputReceived(inputString);
 			}
@@ -35,5 +39,7 @@ public class TCPInputConnection implements InputConnection {
 			connection.lostConnection();
 		}
 	}
-
+	public void setInactive(){
+	    isActive = false;
+	}
 }

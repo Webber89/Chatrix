@@ -140,4 +140,11 @@ public class Client implements MotherConnection {
 	public void lostConnection() {
 		ServerController.removeClient(this);
 	}
+
+	@Override
+	public void gotPing()
+	{
+	    // TODO Auto-generated method stub
+	    
+	}
 }
