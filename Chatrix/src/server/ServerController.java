@@ -164,6 +164,7 @@ public class ServerController {
 			returnMessage.addKeyValue("message", "User already exists");
 		} else {
 			users.put(user, pass);
+			activeUsers.put(user, client);
 			saveUserList();
 			returnMessage.addKeyValue("success", "true");
 			returnMessage.addKeyValue("token", generateToken());
