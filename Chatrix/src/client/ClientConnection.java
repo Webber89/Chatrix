@@ -138,6 +138,22 @@ public class ClientConnection implements MotherConnection
 	}
 
     }
+    
+    public void rejoin(String user, String pass)
+    {
+	try
+	{
+	    Message regMsg = new Message(Message.Type.REGISTER);
+	    regMsg.addKeyValue("user", user);
+	    regMsg.addKeyValue("pass", pass);
+
+	    output.send(regMsg.toJson());
+	} catch (Exception e)
+	{
+	    e.printStackTrace();
+	}
+
+    }
 
     public void connect(String ip, int port, String conType)
 	    throws UnknownHostException, IOException
