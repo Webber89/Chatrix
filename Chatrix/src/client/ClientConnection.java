@@ -21,29 +21,8 @@ public class ClientConnection implements MotherConnection
     private InputConnection input;
     private OutputConnection output;
 
-    public ClientConnection(String ip, int port, String conType)
+    public ClientConnection()
     {
-	try
-	{
-	    socket = new Socket(ip, port);
-	    if (conType.equals("TCP"))
-	    {
-		output = new TCPOutputConnection(socket);
-		input = new TCPInputConnection(this);
-	    } else
-	    {
-		// TODO implementér UDP
-		output = null;
-		input = null;
-	    }
-	    new Thread(input).start();
-	} catch (UnknownHostException e)
-	{
-	    e.printStackTrace();
-	} catch (IOException e)
-	{
-	    e.printStackTrace();
-	}
     }
 
     public void sendMessage(String room, String content, String token)
@@ -145,6 +124,22 @@ public class ClientConnection implements MotherConnection
 	    e.printStackTrace();
 	}
 
+    }
+    
+    public void connect(String ip, int port, String conType) throws UnknownHostException, IOException{
+	
+	socket = new Socket(ip, port);
+	    if (conType.equals("TCP"))
+	    {
+		output = new TCPOutputConnection(socket);
+		input = new TCPInputConnection(this);
+	    } else
+	    {
+		// TODO implementér UDP
+		output = null;
+		input = null;
+	    }
+	    new Thread(input).start();
     }
 
 }

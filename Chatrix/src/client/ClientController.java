@@ -29,10 +29,14 @@ public class ClientController {
 	public void launchClient() {
 		try {
 			getIP();
-			connection = new ClientConnection(ip, port, conType);
+			connection = new ClientConnection();
+			connection.connect(ip, port, conType);
+			ClientLogin.showStatusMessage("Please enter credentials");
 		} catch (Exception e) {
-			e.printStackTrace();
+		    System.out.println(e.getMessage());
+		    ClientLogin.showStatusMessage("Failed to connect to server");
 		}
+		
 	}
 
 	public void send(String room, String message) {
@@ -57,7 +61,7 @@ public class ClientController {
 		try {
 		connection.login(user, password);
 		} catch (Exception e) {
-			ClientLogin.showErrorMessage(e.getMessage());
+			ClientLogin.showStatusMessage(e.getMessage());
 		}
 	}
 	
@@ -67,7 +71,7 @@ public class ClientController {
 			System.out.println(token);
 			ClientLogin.startClient();
 		} else {
-			ClientLogin.showErrorMessage(message.getValue("message"));
+			ClientLogin.showStatusMessage(message.getValue("message"));
 		}
 		
 	}
