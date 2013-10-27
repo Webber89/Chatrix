@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 public class InsertionSort {
 
-	public static void main(String[] lort) throws JsonParseException, JsonMappingException, IOException {
+	public static void main(String[] args) throws JsonParseException, JsonMappingException, IOException {
 //		test();
 		String[] strings = { "hans", "preben" };
 		System.out.println(Message.writeValueAsString(strings));

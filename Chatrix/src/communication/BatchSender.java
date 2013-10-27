@@ -11,16 +11,18 @@ import core.Message;
 
 public class BatchSender {
 	private static BatchSender instance = new BatchSender();
-	private static ExecutorService threadPool = Executors.newFixedThreadPool(10);
-	
-	class MessageTask implements Runnable{
+	private static ExecutorService threadPool = Executors
+			.newFixedThreadPool(10);
+
+	class MessageTask implements Runnable {
 		private OutputConnection out;
 		private String message;
-		
+
 		public MessageTask(OutputConnection out, String message) {
 			this.out = out;
 			this.message = message;
 		}
+
 		@Override
 		public void run() {
 			try {
@@ -29,13 +31,13 @@ public class BatchSender {
 				System.out.println("Could not send, client disconnected");
 			}
 		}
-		
+
 	}
-	
+
 	private BatchSender() {
 		new Thread(new Pinger()).start();
 	}
-		
+
 	public void submit(OutputConnection out, Message message) {
 		try {
 			submit(out, message.toJson());
@@ -43,29 +45,36 @@ public class BatchSender {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void submit(OutputConnection out, String message) {
 		threadPool.submit(new MessageTask(out, message));
 	}
-	
+
 	public static BatchSender getInstance() {
 		return instance;
 	}
-	
+
 	class Pinger implements Runnable {
 
 		@Override
 		public void run() {
-			for (Client c : ServerController.getActiveUsers())
-				submit(c.output, "ping");
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			while (true) {
+				for (Client c : ServerController.getActiveUsers()) {
+					long time = System.currentTimeMillis();
+					if (!c.isActive() || (time - c.getLastPing())>1000) {
+						c.setActive(false);
+					} else {
+						submit(c.output, "ping");
+					}
+				}
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
-		
+
 	}
-	
-	
+
 }

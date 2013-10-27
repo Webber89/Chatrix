@@ -51,7 +51,11 @@ public class Room {
 		returnMessage.addKeyValue("message", message.getValue("message"));
 		returnMessage.addKeyValue("timestamp", getTime());
 		for (Client c : userList.values()) {
+			if (c.isActive()) {
 			sender.submit(c.output, returnMessage);
+			} else {
+				// TODO add to messagebuffer
+			}
 		}
 	}
 
