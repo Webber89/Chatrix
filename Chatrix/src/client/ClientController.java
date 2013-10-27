@@ -102,7 +102,12 @@ public class ClientController {
 	{
 	    if(rooms.containsKey(message.getValue("roomName"))){
 //		rooms.get(message.getValue("roomName")).postMessage(message);
-		ClientGUI.getInstance().AddMessage(message.getValue("user"),message.getValue("message"),message.getValue("timestamp"));
+		ClientGUI.getInstance().addMessage(message.getValue("user"),message.getValue("message"),message.getValue("timestamp"));
 	    }
+	}
+
+	public void register(String user, String pass)
+	{
+	    connection.register(user,pass);
 	}
 }

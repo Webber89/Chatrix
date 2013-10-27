@@ -169,7 +169,7 @@ public class ClientGUI extends JFrame
 	return gui;
     }
 
-    public void AddMessage(String user, String message, String timestamp)
+    public void addMessage(String user, String message, String timestamp)
     {
 	msgWall.setCaretPosition(msgWall.getDocument().getLength());
 	StyledDocument doc = (StyledDocument) msgWall.getDocument();
@@ -189,5 +189,5 @@ public class ClientGUI extends JFrame
 //		
 //		+ "\n");
     }
-
+    
 }

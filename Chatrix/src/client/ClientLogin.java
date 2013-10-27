@@ -71,6 +71,11 @@ public class ClientLogin {
 		frame.getContentPane().add(statusLbl);
 
 		btnRegister = new JButton("Register");
+		btnRegister.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			    register();
+			}
+		});
 		btnRegister.setBounds(100, 143, 89, 23);
 		frame.getContentPane().add(btnRegister);
 	}
@@ -88,4 +93,7 @@ public class ClientLogin {
 			controller.login(textField.getText(), new String(
 					passwordField.getPassword()));
 		}
+		 public void register (){
+			controller.register(textField.getText(),new String(passwordField.getPassword()));
+		    }
 }

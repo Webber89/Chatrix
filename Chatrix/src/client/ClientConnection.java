@@ -117,7 +117,6 @@ public class ClientConnection implements MotherConnection
 		ClientController.getInstance().handleMessage(message);
 		//TODO receive and present message
 		break;
-		
 	
 		
 	    default:
@@ -139,6 +138,11 @@ public class ClientConnection implements MotherConnection
 	public void lostConnection() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public void register(String user, String pass)
+	{
+//	    Message
 	}
 
 }

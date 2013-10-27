@@ -53,9 +53,9 @@ public class InsertionSort {
 		return sortedList;
 	}
 	
-	public static <T extends Comparable<T>> ArrayList<T> sortMoreUsers(
-			ArrayList<T> unsortedList) {
-		ArrayList<T> sortedList = new ArrayList<T>(unsortedList);
+	public static <T extends Comparable<T>> List<T> sortMoreUsers(
+			List<T> users) {
+		List<T> sortedList = new ArrayList<T>(users);
 
 		for (int sortedElements = 1; sortedElements < sortedList.size(); sortedElements++) {
 

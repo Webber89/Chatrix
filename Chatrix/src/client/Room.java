@@ -4,6 +4,8 @@ package client;
 import java.util.ArrayList;
 import java.util.List;
 
+import core.InsertionSort;
+
 public class Room
 {
     public String roomName;
@@ -16,7 +18,7 @@ public class Room
 
     public void updateUserList(List<String> users){
 	
-	this.userList = users;
+	this.userList = InsertionSort.sortMoreUsers(users);
 	ClientGUI.getInstance().updateUsers(userList);
     }
 
