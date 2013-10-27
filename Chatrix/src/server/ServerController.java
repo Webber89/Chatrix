@@ -222,4 +222,17 @@ public class ServerController {
 	public static Collection<Client> getActiveUsers() {
 		return activeUsers.values();
 	}
+
+	public static void activateUser(String token, Client newClient) {
+		for (Client c : activeUsers.values()) {
+			if (c.getToken().equals(token)) {
+				c.output = newClient.output;
+				c.input = newClient.input;
+				c.setActive(true);
+				return;
+			}
+		}
+		System.out.println("Could not find user.");
+	}
+
 }

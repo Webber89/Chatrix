@@ -16,11 +16,13 @@ import core.MotherConnection;
 
 public class Client implements MotherConnection {
 	public Socket socket;
-	private InputConnection input;
+	public InputConnection input;
 	public OutputConnection output;
 	private Message message;
 	private String token;
 	private String name;
+	private boolean active = true;
+	private Long lastPing;
 
 	public Client(Socket socket) {
 		this.socket = socket;
@@ -85,6 +87,9 @@ public class Client implements MotherConnection {
 				e.printStackTrace();
 			}
 			break;
+		case "RJOIN":
+			ServerController.activateUser(message.getValue("token"), this);
+			break;
 		case "ENT":
 			// enter(message);
 			break;
@@ -144,7 +149,20 @@ public class Client implements MotherConnection {
 	@Override
 	public void gotPing()
 	{
-	    // TODO Auto-generated method stub
-	    
+		lastPing = System.currentTimeMillis();
+	}
+	
+	public Long getLastPing() {
+		if (lastPing == null)
+			lastPing = System.currentTimeMillis();
+		return lastPing;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+	
+	public boolean isActive() {
+		return active;
 	}
 }
