@@ -26,7 +26,7 @@ public class BatchSender {
 			try {
 				out.send(message);
 			} catch (IOException e) {
-				e.printStackTrace();
+				System.out.println("Could not send, client disconnected");
 			}
 		}
 		

@@ -155,6 +155,22 @@ public class ServerController {
 		return returnMessage;
 	}
 
+	public static Message register(Message message, Client client) {
+		String user = message.keyValuePairs.get("user");
+		String pass = message.keyValuePairs.get("pass");
+		Message returnMessage = new Message(Message.Type.SERVER_JOIN);
+		if (users.containsKey(user)) {
+			returnMessage.addKeyValue("success", "false");
+			returnMessage.addKeyValue("message", "User already exists");
+		} else {
+			users.put(user, pass);
+			saveUserList();
+			returnMessage.addKeyValue("success", "true");
+			returnMessage.addKeyValue("token", generateToken());
+		}
+		return returnMessage;
+	}
+	
 	private static String generateToken() {
 		return UUID.randomUUID().toString();
 	}
@@ -177,7 +193,6 @@ public class ServerController {
 
 	}
 
-	@SuppressWarnings("unused")
 	private static void saveUserList() {
 		ObjectOutputStream out;
 		try {
@@ -200,7 +215,7 @@ public class ServerController {
 		for (Room r : rooms.values()) {
 			r.removeClient(client);
 		}
-		serverCon.getClientList().remove(client);
+		activeUsers.remove(client.getName());
 	}
 	
 	public static Collection<Client> getActiveUsers() {
