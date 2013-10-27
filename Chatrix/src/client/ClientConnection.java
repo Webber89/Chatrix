@@ -72,16 +72,7 @@ public class ClientConnection implements MotherConnection
 	try
 	{
 	    output.send(message.toJson());
-	} catch (JsonParseException e)
-	{
-	    e.printStackTrace();
-	} catch (JsonMappingException e)
-	{
-	    e.printStackTrace();
-	} catch (IOException e)
-	{
-	    e.printStackTrace();
-	} catch (IllegalMessageException e)
+	} catch (Exception e)
 	{
 	    e.printStackTrace();
 	}
@@ -115,10 +106,9 @@ public class ClientConnection implements MotherConnection
 		break;
 	    case "SMSG":
 		ClientController.getInstance().handleMessage(message);
-		//TODO receive and present message
+		// TODO receive and present message
 		break;
-	
-		
+
 	    default:
 		System.out.println(input);
 	    }
@@ -134,15 +124,27 @@ public class ClientConnection implements MotherConnection
 	}
     }
 
-	@Override
-	public void lostConnection() {
-		// TODO Auto-generated method stub
-		
+    @Override
+    public void lostConnection()
+    {
+	// TODO Auto-generated method stub
+
+    }
+
+    public void register(String user, String pass)
+    {
+	try
+	{
+	    Message regMsg = new Message(Message.Type.REGISTER);
+	    regMsg.addKeyValue("user", user);
+	    regMsg.addKeyValue("pass", pass);
+
+	    output.send(regMsg.toJson());
+	} catch (Exception e)
+	{
+	    e.printStackTrace();
 	}
 
-	public void register(String user, String pass)
-	{
-//	    Message
-	}
+    }
 
 }
