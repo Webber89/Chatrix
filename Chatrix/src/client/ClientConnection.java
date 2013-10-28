@@ -25,14 +25,15 @@ import core.MotherConnection;
 public class ClientConnection implements MotherConnection
 {
     private Socket socket;
-    private InputConnection input;
-    private OutputConnection output;
+    private volatile InputConnection input;
+    private volatile OutputConnection output;
     ExecutorService pingService = Executors.newFixedThreadPool(1);
     private volatile boolean gotPing = false;
     private Semaphore sem = new Semaphore(1);
     private String ip;
     private int port;
     private String conType;
+    private volatile boolean isReconnected;
 
     public ClientConnection()
     {
@@ -138,7 +139,7 @@ public class ClientConnection implements MotherConnection
 	}
 
     }
-    
+
     public void rejoin(String user, String pass)
     {
 	try
@@ -192,12 +193,12 @@ public class ClientConnection implements MotherConnection
 		{
 		    sem.release();
 		    gotPing = false;
-		    System.out.println("gotPing = false");
 		    Thread.sleep(500);
 		    output.send("ping");
-		    Thread.sleep(500);
+		    Thread.sleep(1500);
 		    if (!gotPing)
 		    {
+			System.out.println("Didn't get ping");
 			lostConnection();
 		    }
 
@@ -214,12 +215,12 @@ public class ClientConnection implements MotherConnection
     @Override
     public void gotPing()
     {
+	System.out.println("Got ping NOW");
 	gotPing = true;
 	try
 	{
 	    if (sem.availablePermits() == 0)
 	    {
-		System.out.println("too many pings");
 	    } else
 	    {
 		sem.acquire();
@@ -234,12 +235,12 @@ public class ClientConnection implements MotherConnection
     public void reconnect() throws IOException
     {
 	socket.close();
-	boolean isReconnected = false;
+	isReconnected = false;
 	long delay = 1;
 	ExecutorService reconnectService = Executors.newFixedThreadPool(1);
 	while (!isReconnected)
 	{
-	    System.out.println("Trying to connect in " + delay);
+	    System.out.println("Trying to reconnect in " + delay);
 	    Future<Boolean> futureSuccess = reconnectService
 		    .submit(new Callable<Boolean>()
 		    {
@@ -247,18 +248,27 @@ public class ClientConnection implements MotherConnection
 			@Override
 			public Boolean call() throws Exception
 			{
-			    System.out.println("Attempting call");
 			    try
 			    {
-				connect();
-				Message m = new Message(Message.Type.REJOIN);
-				m.addKeyValue("token", ClientController.getInstance().getToken());
-				output.send(m.toJson());
-				System.out.println("succesfull connect");
+				Thread.sleep(500);
+				if (!isReconnected)
+				{
+				    connect();
+				    Message m = new Message(Message.Type.REJOIN);
+				    m.addKeyValue("token", ClientController
+					    .getInstance().getToken());
+				    output.send(m.toJson());
+				    System.out.println("succesfull connect");
+				    isReconnected = true;
+				    gotPing = true;
+				    pingService.shutdownNow();
+				    pingService = Executors.newFixedThreadPool(1);
+				    ClientController.getInstance().regainedConnection();
+				}
 				return true;
 			    } catch (Exception e)
 			    {
-				e.printStackTrace();
+				System.out.println("Sleep interupted");
 				return false;
 			    }
 			}
@@ -267,22 +277,53 @@ public class ClientConnection implements MotherConnection
 	    {
 		isReconnected = futureSuccess.get(delay++, TimeUnit.SECONDS);
 		reconnectService.shutdownNow();
-		ClientController.getInstance().regainedConnection();
-	    } 
-	    catch(TimeoutException e2){
-		System.out.println("Timed out delay: " +delay);
-	    }
-	    catch (Exception e)
+	    } catch (TimeoutException e2)
 	    {
-	    e.printStackTrace();
+		System.out.println("Timed out delay: " + delay);
+	    } catch (Exception e)
+	    {
+	    } finally
+	    {
+		futureSuccess.cancel(true);
 	    }
-	    finally {
-		System.out.println("Finally");
-		System.out.println(futureSuccess.cancel(true));
-	    }
-	    
+
 	}
 
     }
 
+    public void reconnect2()
+    {
+	long delay = 1;
+	isReconnected = false;
+	try
+	{
+	    socket.close();
+	} catch (IOException e1)
+	{
+	    System.out.println(e1.getMessage());
+	}
+	while (!isReconnected)
+	{
+	    System.out.println("Trying to reconnect in " + delay);
+	    try
+	    {
+		connect();
+		Message m = new Message(Message.Type.REJOIN);
+		m.addKeyValue("token", ClientController.getInstance()
+			.getToken());
+		output.send(m.toJson());
+		System.out.println("succesfull connect");
+		isReconnected= true;
+		ClientController.getInstance().regainedConnection();
+
+	    } catch (Exception e)
+	    {
+		delay++;
+		e.printStackTrace();
+
+	    }
+
+	}
+
+    }
 }

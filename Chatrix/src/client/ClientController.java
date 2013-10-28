@@ -151,7 +151,7 @@ public class ClientController
 		connection.reconnect();
 	    } catch (IOException e)
 	    {
-		System.out.println(e.getMessage());
+		e.printStackTrace();
 	    }
 	}
 	// TODO handle a lost connection / try to reconnect
