@@ -2,9 +2,12 @@ package server;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+
+import communication.BatchSender;
 import communication.InputConnection;
 import communication.OutputConnection;
 import communication.TCPInputConnection;
@@ -23,6 +26,7 @@ public class Client implements MotherConnection {
 	private String name;
 	private boolean active = true;
 	private Long lastPing;
+	private ArrayList<Message> messageBuffer = new ArrayList<Message>();
 
 	public Client(Socket socket) {
 		this.socket = socket;
@@ -150,7 +154,6 @@ public class Client implements MotherConnection {
 	@Override
 	public void gotPing()
 	{
-		System.out.println("Got ping");
 		lastPing = System.currentTimeMillis();
 	}
 	
@@ -174,5 +177,24 @@ public class Client implements MotherConnection {
 		this.input = input;
 		input.setMother(this);
 		new Thread(input).start();
+	}
+	
+	public void addToBuffer(Message message) {
+		messageBuffer.add(message);
+	}
+	
+	public void flushBuffer() {
+		String[] messages = new String[messageBuffer.size()];
+		for (int i = 0; i < messageBuffer.size(); i++) {
+			try {
+			messages[i] = messageBuffer.get(i).toJson();
+			} catch (Exception e) {
+				System.out.println("OH NO");
+			}
+		}
+		Message bufferMessage = new Message(Message.Type.BUFFER_MESSAGE);
+		bufferMessage.addKeyValue("messages", Message.writeValueAsString(messages));
+		BatchSender.getInstance().submit(output, bufferMessage);
+		messageBuffer.clear();
 	}
 }

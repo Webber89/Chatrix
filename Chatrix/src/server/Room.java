@@ -52,9 +52,9 @@ public class Room {
 		returnMessage.addKeyValue("timestamp", getTime());
 		for (Client c : userList.values()) {
 			if (c.isActive()) {
-			sender.submit(c.output, returnMessage);
+				sender.submit(c.output, returnMessage);
 			} else {
-				// TODO add to messagebuffer
+				c.addToBuffer(returnMessage);
 			}
 		}
 	}

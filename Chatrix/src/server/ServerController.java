@@ -236,6 +236,7 @@ public class ServerController {
 				c.reConnected(newClient.input, newClient.output);
 				c.gotPing();
 				c.setActive(true);
+				c.flushBuffer();
 				return;
 			}
 		}
