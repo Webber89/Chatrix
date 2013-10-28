@@ -143,12 +143,14 @@ public class Client implements MotherConnection {
 
 	@Override
 	public void lostConnection() {
+		active = false;
 		ServerController.removeClient(this);
 	}
 
 	@Override
 	public void gotPing()
 	{
+		System.out.println("Got ping");
 		lastPing = System.currentTimeMillis();
 	}
 	
@@ -164,5 +166,13 @@ public class Client implements MotherConnection {
 	
 	public boolean isActive() {
 		return active;
+	}
+	
+	public void reConnected(InputConnection input, OutputConnection output) {
+		this.input.setMother(null);
+		this.output = output;
+		this.input = input;
+		input.setMother(this);
+		new Thread(input).start();
 	}
 }

@@ -61,14 +61,15 @@ public class BatchSender {
 			while (true) {
 				for (Client c : ServerController.getActiveUsers()) {
 					long time = System.currentTimeMillis();
-					if (!c.isActive() || (time - c.getLastPing())>1000) {
+					if (!c.isActive() || (time - c.getLastPing())>2000) {
 						c.setActive(false);
+						System.out.println("Batchsender set " + c.getName() + " as inactive");
 					} else {
 						submit(c.output, "ping");
 					}
 				}
 				try {
-					Thread.sleep(500);
+					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
