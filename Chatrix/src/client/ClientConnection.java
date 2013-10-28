@@ -101,6 +101,8 @@ public class ClientConnection implements MotherConnection
 		ClientController.getInstance().handleMessage(message);
 		// TODO receive and present message
 		break;
+	    case "BMSG":
+		ClientController.getInstance().handleBufferMessages(message);
 	    default:
 		System.out.println(input);
 	    }
@@ -193,7 +195,6 @@ public class ClientConnection implements MotherConnection
 		{
 		    sem.release();
 		    gotPing = false;
-		    Thread.sleep(500);
 		    output.send("ping");
 		    Thread.sleep(1500);
 		    if (!gotPing)
@@ -215,7 +216,6 @@ public class ClientConnection implements MotherConnection
     @Override
     public void gotPing()
     {
-	System.out.println("Got ping NOW");
 	gotPing = true;
 	try
 	{
@@ -253,12 +253,14 @@ public class ClientConnection implements MotherConnection
 				Thread.sleep(500);
 				if (!isReconnected)
 				{
+				    InputConnection tempCon = input;
 				    connect();
 				    Message m = new Message(Message.Type.REJOIN);
 				    m.addKeyValue("token", ClientController
 					    .getInstance().getToken());
 				    output.send(m.toJson());
 				    System.out.println("succesfull connect");
+				    tempCon.setMother(null);
 				    isReconnected = true;
 				    gotPing = true;
 				    pingService.shutdownNow();
@@ -276,10 +278,16 @@ public class ClientConnection implements MotherConnection
 	    try
 	    {
 		isReconnected = futureSuccess.get(delay++, TimeUnit.SECONDS);
-		reconnectService.shutdownNow();
+		if(isReconnected){
+		    reconnectService.shutdownNow();
+		}
+		else{
+		    Thread.sleep(delay*1000);
+		}
 	    } catch (TimeoutException e2)
 	    {
 		System.out.println("Timed out delay: " + delay);
+		
 	    } catch (Exception e)
 	    {
 	    } finally

@@ -191,23 +191,26 @@ public class ClientGUI extends JFrame
 
     public void lostConnection()
     {
+	append(Color.RED,"Connection lost - trying to reconnect");
 	sendButton.setEnabled(false);
+    }
+
+    public void reconnected()
+    {
+	append(Color.GREEN,"Connction re-established");
+	sendButton.setEnabled(true);
+    }
+    public void append(Color c,String text){
 	StyledDocument doc = (StyledDocument) msgWall.getDocument();
 	Style style = doc.addStyle("styleName", null);
 	StyleConstants.setBold(style,true);
-	style.addAttribute(StyleConstants.Foreground, Color.RED);
+	style.addAttribute(StyleConstants.Foreground, c);
 	try
 	{
-	    msgWall.getDocument().insertString(msgWall.getDocument().getLength(),"Connection lost - trying to reconnect\n", style);
+	    msgWall.getDocument().insertString(msgWall.getDocument().getLength(),text+"\n", style);
 	} catch (BadLocationException e)
 	{
 	    System.out.println(e.getMessage());
 	}
     }
-
-    public void reconnected()
-    {
-	sendButton.setEnabled(true);
-    }
-    
 }

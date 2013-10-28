@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import core.Message;
@@ -168,5 +169,20 @@ public class ClientController
     public void setToken(String token)
     {
         this.token = token;
+    }
+
+    public void handleBufferMessages(Message message)
+    {
+	try
+	{
+	    List<String> bufferMessages = Message.toArrayList(message.getValue("messages"));
+	    for (String s : bufferMessages){
+		handleMessage(Message.parseJSONtoMessage(s));
+	    }
+	} catch (Exception e)
+	{
+	    e.printStackTrace();
+	} 
+	
     }
 }
