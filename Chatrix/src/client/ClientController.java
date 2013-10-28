@@ -19,6 +19,7 @@ public class ClientController
     @SuppressWarnings("unused")
     private String user;
     private String token;
+
     private HashMap<String, Room> rooms = new HashMap<String, Room>();
     private boolean isConnected = true;
 
@@ -158,5 +159,14 @@ public class ClientController
     public void regainedConnection(){
 	ClientGUI.getInstance().reconnected();
 	isConnected = true;
+    }
+    public String getToken()
+    {
+        return token;
+    }
+
+    public void setToken(String token)
+    {
+        this.token = token;
     }
 }

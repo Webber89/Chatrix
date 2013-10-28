@@ -251,6 +251,9 @@ public class ClientConnection implements MotherConnection
 			    try
 			    {
 				connect();
+				Message m = new Message(Message.Type.REJOIN);
+				m.addKeyValue("token", ClientController.getInstance().getToken());
+				output.send(m.toJson());
 				System.out.println("succesfull connect");
 				return true;
 			    } catch (Exception e)

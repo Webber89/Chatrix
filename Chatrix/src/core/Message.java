@@ -39,7 +39,8 @@ public class Message {
 		ROOM_INFO("RINFO", 2), // roomName, users
 		CLIENT_INVITE("CINV", 3),
 		SERVER_INVITE("SINV", 2), 
-		REGISTER("REG", 2);
+		REGISTER("REG", 2), 
+		REJOIN("RJOIN",1);
 
 		public String type;
 		public int minParams;
