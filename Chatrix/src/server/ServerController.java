@@ -137,9 +137,16 @@ public class ServerController {
 		Message returnMessage = new Message(Message.Type.SERVER_JOIN);
 		for (Client cl : activeUsers.values()) {
 			if (cl.getName().equals(user)) {
+				if (cl.isActive()) {
 				returnMessage.addKeyValue("success", "false");
 				returnMessage.addKeyValue("message", "User already logged in");
 				return returnMessage;
+				} else {
+					returnMessage.addKeyValue("success", "true");
+					returnMessage.addKeyValue("token", generateToken());
+					activeUsers.remove(cl);
+					return returnMessage;
+				}
 			}
 		}
 		if (users.containsKey(user)) {
@@ -226,8 +233,8 @@ public class ServerController {
 	public static void activateUser(String token, Client newClient) {
 		for (Client c : activeUsers.values()) {
 			if (c.getToken().equals(token)) {
-				c.output = newClient.output;
-				c.input = newClient.input;
+				c.reConnected(newClient.input, newClient.output);
+				c.gotPing();
 				c.setActive(true);
 				return;
 			}
