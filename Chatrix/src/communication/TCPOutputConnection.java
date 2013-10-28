@@ -15,18 +15,11 @@ public class TCPOutputConnection implements OutputConnection {
 
 	@Override
 	public void send(String content) throws IOException {
-		// TODO Håndtering af exceptions
-//	    System.out.println("Writing: " + content);
+	    System.out.println("Writing: " + content);
 		writer.write(content + "\n");
 		writer.flush();
-//		closeConnection();
 	}
 
-	@Override
-	public void ping() {
-		// TODO ping
-	}
-	
 	public void closeConnection() {
 		try {
 			System.out.println("Closing outputstream writer ...");
