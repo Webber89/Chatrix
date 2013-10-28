@@ -155,7 +155,6 @@ public class ClientController
 		e.printStackTrace();
 	    }
 	}
-	// TODO handle a lost connection / try to reconnect
     }
     public void regainedConnection(){
 	ClientGUI.getInstance().reconnected();

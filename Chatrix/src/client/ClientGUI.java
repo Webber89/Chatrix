@@ -181,12 +181,8 @@ public class ClientGUI extends JFrame
 	    	+ "\n", null);
 	} catch (BadLocationException e)
 	{
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	}
-//	append("(<font color=green" + timestamp + "</font>) " + user + " says: " + message
-//		
-//		+ "\n");
     }
 
     public void lostConnection()

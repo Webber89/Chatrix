@@ -95,11 +95,9 @@ public class ClientConnection implements MotherConnection
 
 	    case "SINFO":
 		ClientController.getInstance().handleServerInfo(message);
-		// TODO server sends rooms
 		break;
 	    case "SMSG":
 		ClientController.getInstance().handleMessage(message);
-		// TODO receive and present message
 		break;
 	    case "BMSG":
 		ClientController.getInstance().handleBufferMessages(message);
