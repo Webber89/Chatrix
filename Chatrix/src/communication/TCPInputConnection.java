@@ -20,13 +20,17 @@ public class TCPInputConnection implements InputConnection {
 	@Override
 	public void listen() throws IOException {
 		while (isActive) {
-			String inputString = reader.readLine();
-			if (inputString != null) {
+			if (connection == null) {
+				isActive = false;
+			} else {
+				String inputString = reader.readLine();
+				if (inputString != null) {
 
-				if (inputString.equals("ping")) {
-					connection.gotPing();
-				} else {
-					connection.inputReceived(inputString);
+					if (inputString.equals("ping")) {
+						connection.gotPing();
+					} else {
+						connection.inputReceived(inputString);
+					}
 				}
 			}
 		}
@@ -38,8 +42,8 @@ public class TCPInputConnection implements InputConnection {
 			listen();
 		} catch (IOException e) {
 			if (connection != null) {
-			System.out.println("TCPInputConnection interrupted");
-			connection.lostConnection();
+				System.out.println("TCPInputConnection interrupted");
+				connection.lostConnection();
 			}
 		}
 	}
@@ -47,7 +51,7 @@ public class TCPInputConnection implements InputConnection {
 	public void setInactive() {
 		isActive = false;
 	}
-	
+
 	public void setMother(MotherConnection connection) {
 		this.connection = connection;
 	}

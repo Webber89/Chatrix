@@ -61,7 +61,7 @@ public class BatchSender {
 			while (true) {
 				for (Client c : ServerController.getActiveUsers()) {
 					long time = System.currentTimeMillis();
-					if (!c.isActive() || (time - c.getLastPing())>2000) {
+					if (!c.isActive() || (time - c.getLastPing())>3000) {
 						c.setActive(false);
 						System.out.println("Batchsender set " + c.getName() + " as inactive");
 					} else {
