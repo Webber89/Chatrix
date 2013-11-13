@@ -17,6 +17,8 @@ import communication.InputConnection;
 import communication.OutputConnection;
 import communication.TCPInputConnection;
 import communication.TCPOutputConnection;
+import communication.UDPInputConnection;
+import communication.UDPOutputConnection;
 
 import core.IllegalMessageException;
 import core.Message;
@@ -175,8 +177,8 @@ public class ClientConnection implements MotherConnection
 	} else
 	{
 	    // TODO implementér UDP
-	    output = null;
-	    input = null;
+	    output = new UDPOutputConnection(socket);
+	    input = new UDPInputConnection(this);
 	}
 	new Thread(input).start();
     }
