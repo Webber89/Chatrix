@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Collection;
 import java.util.List;
 
@@ -45,6 +47,15 @@ public class ClientGUI extends JFrame
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private ClientGUI()
     {
+	addWindowListener(new WindowAdapter()
+	{
+	    @Override
+	    public void windowClosing(WindowEvent e)
+	    {
+		super.windowClosing(e);
+		ClientController.getInstance().logout();
+	    }
+	});
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	try
 	{
@@ -89,7 +100,6 @@ public class ClientGUI extends JFrame
 	{
 	    public void actionPerformed(ActionEvent arg0)
 	    {
-
 		sendMsg();
 	    }
 	});

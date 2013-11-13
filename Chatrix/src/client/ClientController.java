@@ -184,4 +184,9 @@ public class ClientController
 	} 
 	
     }
+
+    public void logout()
+    {
+	connection.logout(token);
+    }
 }

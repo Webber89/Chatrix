@@ -1,7 +1,10 @@
 package client;
 
 import java.io.IOException;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.net.UnknownHostException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -169,15 +172,16 @@ public class ClientConnection implements MotherConnection
 
     private void connect() throws UnknownHostException, IOException
     {
-	socket = new Socket(ip, port);
+	
 	if (conType.equals("TCP"))
 	{
+	    socket = new Socket(ip, port);
 	    output = new TCPOutputConnection(socket);
 	    input = new TCPInputConnection(this);
 	} else
 	{
-	    // TODO implementér UDP
-	    output = new UDPOutputConnection(socket);
+	    DatagramSocket dgs = new DatagramSocket(port);
+	    output = new UDPOutputConnection(dgs,InetAddress.getAllByName(ip));
 	    input = new UDPInputConnection(this);
 	}
 	new Thread(input).start();
@@ -299,39 +303,18 @@ public class ClientConnection implements MotherConnection
 
     }
 
-    public void reconnect2()
+    public void logout(String token)
     {
-	long delay = 1;
-	isReconnected = false;
 	try
 	{
-	    socket.close();
-	} catch (IOException e1)
+	    Message logoutMsg = new Message(Message.Type.QUIT);
+	    logoutMsg.addKeyValue("token", token);
+
+	    output.send(logoutMsg.toJson());
+	} catch (Exception e)
 	{
-	    System.out.println(e1.getMessage());
-	}
-	while (!isReconnected)
-	{
-	    System.out.println("Trying to reconnect in " + delay);
-	    try
-	    {
-		connect();
-		Message m = new Message(Message.Type.REJOIN);
-		m.addKeyValue("token", ClientController.getInstance()
-			.getToken());
-		output.send(m.toJson());
-		System.out.println("succesfull connect");
-		isReconnected= true;
-		ClientController.getInstance().regainedConnection();
-
-	    } catch (Exception e)
-	    {
-		delay++;
-		e.printStackTrace();
-
-	    }
-
-	}
-
+	    System.out.println("sending logout msg");
+	    e.printStackTrace();
+	}	
     }
 }
