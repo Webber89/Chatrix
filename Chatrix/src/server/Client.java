@@ -31,18 +31,13 @@ public class Client implements MotherConnection {
 	public Client(Socket socket) {
 		this.socket = socket;
 		try {
-			input = new TCPInputConnection(this);
+			input = new TCPInputConnection(this,socket);
 			output = new TCPOutputConnection(socket);
 			new Thread(input).start();
 			System.out.println("input started");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	@Override
-	public Socket getSocket() {
-		return socket;
 	}
 
 	@Override

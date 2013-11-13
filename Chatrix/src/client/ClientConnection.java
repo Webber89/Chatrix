@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.SocketAddress;
 import java.net.UnknownHostException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -29,7 +28,6 @@ import core.MotherConnection;
 
 public class ClientConnection implements MotherConnection
 {
-    private Socket socket;
     private volatile InputConnection input;
     private volatile OutputConnection output;
     ExecutorService pingService = Executors.newFixedThreadPool(1);
@@ -74,12 +72,6 @@ public class ClientConnection implements MotherConnection
 	{
 	    e.printStackTrace();
 	}
-    }
-
-    @Override
-    public Socket getSocket()
-    {
-	return socket;
     }
 
     @Override
@@ -175,14 +167,14 @@ public class ClientConnection implements MotherConnection
 	
 	if (conType.equals("TCP"))
 	{
-	    socket = new Socket(ip, port);
+	    Socket socket = new Socket(ip,port);
 	    output = new TCPOutputConnection(socket);
-	    input = new TCPInputConnection(this);
+	    input = new TCPInputConnection(this,socket);
 	} else
 	{
 	    DatagramSocket dgs = new DatagramSocket(port);
-	    output = new UDPOutputConnection(dgs,InetAddress.getAllByName(ip));
-	    input = new UDPInputConnection(this);
+	    output = new UDPOutputConnection(dgs,InetAddress.getByName(ip));
+	    input = new UDPInputConnection(this,port);
 	}
 	new Thread(input).start();
     }
@@ -238,7 +230,6 @@ public class ClientConnection implements MotherConnection
 
     public void reconnect() throws IOException
     {
-	socket.close();
 	isReconnected = false;
 	long delay = 1;
 	ExecutorService reconnectService = Executors.newFixedThreadPool(1);
