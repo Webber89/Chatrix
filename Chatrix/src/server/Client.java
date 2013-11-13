@@ -140,6 +140,13 @@ public class Client implements MotherConnection {
 	public void setName(String name) {
 		this.name = name;
 	}
+	public void setActive(boolean active) {
+	    this.active = active;
+	}
+	
+	public boolean isActive() {
+	    return active;
+	}
 
 	public String getName() {
 		return name;
@@ -163,13 +170,6 @@ public class Client implements MotherConnection {
 		return lastPing;
 	}
 
-	public void setActive(boolean active) {
-		this.active = active;
-	}
-	
-	public boolean isActive() {
-		return active;
-	}
 	
 	public void reConnected(InputConnection input, OutputConnection output) {
 		this.input.setMother(null);
