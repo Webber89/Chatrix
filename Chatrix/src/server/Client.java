@@ -109,6 +109,8 @@ public class Client implements MotherConnection {
 		case "CINV":
 			// invite(message);
 			break;
+		case "QUIT":
+			ServerController.removeClient(this);
 		}
 	}
 

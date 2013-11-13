@@ -41,7 +41,8 @@ public class Message {
 		SERVER_INVITE("SINV", 2), 
 		REGISTER("REG", 2), // user, pass
 		REJOIN("RJOIN",1), // token
-		BUFFER_MESSAGE("BMSG", 1); 
+		BUFFER_MESSAGE("BMSG", 1),
+		QUIT("QUIT", 1); // token
 		
 
 		public String type;
