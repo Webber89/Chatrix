@@ -1,24 +1,25 @@
 package server;
 
 import java.io.IOException;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-
 import communication.BatchSender;
 import communication.InputConnection;
 import communication.OutputConnection;
 import communication.TCPInputConnection;
 import communication.TCPOutputConnection;
+import communication.UDPOutputConnection;
 
 import core.IllegalMessageException;
 import core.Message;
 import core.MotherConnection;
 
 public class Client implements MotherConnection {
-	public Socket socket;
 	public InputConnection input;
 	public OutputConnection output;
 	private Message message;
@@ -29,12 +30,20 @@ public class Client implements MotherConnection {
 	private ArrayList<Message> messageBuffer = new ArrayList<Message>();
 
 	public Client(Socket socket) {
-		this.socket = socket;
 		try {
 			input = new TCPInputConnection(this,socket);
 			output = new TCPOutputConnection(socket);
 			new Thread(input).start();
 			System.out.println("input started");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public Client(String ip, int port) {
+		input = null;
+		try {
+			output = new UDPOutputConnection(new DatagramSocket(port), InetAddress.getByName(ip));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

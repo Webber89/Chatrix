@@ -45,13 +45,14 @@ public class ServerController {
 		}
 		switch (conType) {
 		case "TCP":
-			serverCon = new ServerConnection(port);
-			serverThread = new Thread(serverCon);
-			serverThread.start();
+			serverCon = new TCPServerConnection(port);
 			break;
 		case "UDP":
+			serverCon = new UDPServerConnection(port);
 			break;
 		}
+		serverThread = new Thread(serverCon);
+		serverThread.start();
 	}
 
 	protected void broadcastIP(String conType) throws Exception {
