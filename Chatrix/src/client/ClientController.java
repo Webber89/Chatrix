@@ -44,7 +44,7 @@ public class ClientController
 	    ClientLogin.showStatusMessage("Please enter credentials");
 	} catch (Exception e)
 	{
-	    System.out.println(e.getMessage());
+	    e.printStackTrace();
 	    ClientLogin.showStatusMessage("Failed to connect to server");
 	}
 

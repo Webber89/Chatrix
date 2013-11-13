@@ -12,8 +12,8 @@ public class UDPInputConnection implements InputConnection {
 	private volatile boolean isActive = true;
 	private DatagramSocket inputSocket;
 	
-	public UDPInputConnection(MotherConnection connection, int port) throws SocketException {
-		inputSocket = new DatagramSocket(port);
+	public UDPInputConnection(MotherConnection connection, DatagramSocket inputSocket) throws SocketException {
+		this.inputSocket = inputSocket;
 		this.connection = connection;
 	}
 

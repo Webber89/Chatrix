@@ -174,7 +174,7 @@ public class ClientConnection implements MotherConnection
 	{
 	    DatagramSocket dgs = new DatagramSocket(port);
 	    output = new UDPOutputConnection(dgs,InetAddress.getByName(ip));
-	    input = new UDPInputConnection(this,port);
+	    input = new UDPInputConnection(this,dgs);
 	}
 	new Thread(input).start();
     }
