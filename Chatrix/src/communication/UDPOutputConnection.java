@@ -17,6 +17,7 @@ public class UDPOutputConnection implements OutputConnection {
 	@Override
 	public void send(String content) throws IOException {
 	    System.out.println("Writing: " + content);
+	    content += "\n";
 	    byte[] data = content.getBytes();
 	    DatagramPacket packet = new DatagramPacket(data, data.length, ip, clientSocket.getPort());
 	    clientSocket.send(packet);
