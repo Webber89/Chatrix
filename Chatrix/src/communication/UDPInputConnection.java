@@ -37,17 +37,15 @@ public class UDPInputConnection implements InputConnection {
 			} else {
 				byte[] data = new byte[1024];
 				DatagramPacket receivePacket = new DatagramPacket(data, data.length);
-				System.out.println("Waiting for data");
-				System.out.println(inputSocket.getPort());
-				System.out.println(inputSocket.getLocalPort());
-				System.out.println(inputSocket.getRemoteSocketAddress());
-				
+//				System.out.println("Waiting for data");
 				inputSocket.receive(receivePacket);
-				System.out.println("UDP received data");
+//				System.out.println("UDP received data");
 				String inputString = new String(receivePacket.getData());
-				System.out.println("Received input - inputstring:"+inputString);
+				inputString = inputString.substring(0,inputString.indexOf('\n'));
+				System.out.println("Received input:"+inputString +" Her slutter inputString!");
+				
 				if (inputString != null) {
-					if (inputString.equals("ping")) {
+					if (inputString.startsWith("ping")) {
 						connection.gotPing();
 					} else {
 						connection.inputReceived(inputString);

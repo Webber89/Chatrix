@@ -99,10 +99,11 @@ public class ClientConnection implements MotherConnection
 	    case "BMSG":
 		ClientController.getInstance().handleBufferMessages(message);
 	    default:
-		System.out.println(input);
+		System.out.println("This is the default in switch case!"+input);
 	    }
 	} catch (JsonParseException e)
 	{
+	    
 	    e.printStackTrace();
 	} catch (JsonMappingException e)
 	{
