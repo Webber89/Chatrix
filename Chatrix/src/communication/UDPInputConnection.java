@@ -37,7 +37,9 @@ public class UDPInputConnection implements InputConnection {
 			} else {
 				byte[] data = new byte[1500];
 				DatagramPacket receivePacket = new DatagramPacket(data, data.length);
+				System.out.println("Waiting for data");
 				inputSocket.receive(receivePacket);
+				System.out.println("UDP received data");
 				String inputString = new String(receivePacket.getData());
 				if (inputString != null) {
 					if (inputString.equals("ping")) {

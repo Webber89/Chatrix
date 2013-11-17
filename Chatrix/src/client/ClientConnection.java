@@ -172,7 +172,8 @@ public class ClientConnection implements MotherConnection
 	    input = new TCPInputConnection(this,socket);
 	} else
 	{
-	    DatagramSocket dgs = new DatagramSocket(port);
+	    DatagramSocket dgs = new DatagramSocket();
+	    dgs.connect(InetAddress.getByName(ip),port);
 	    output = new UDPOutputConnection(dgs,InetAddress.getByName(ip));
 	    input = new UDPInputConnection(this,dgs);
 	}
