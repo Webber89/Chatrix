@@ -3,6 +3,7 @@ package server;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -30,9 +31,13 @@ public class UDPServerConnection implements ServerConnection {
 				DatagramPacket packet = new DatagramPacket(data, data.length);
 				serverSocket.receive(packet);
 				String input = new String(data);
-				String ip = packet.getAddress().toString();
+				InetAddress addr = packet.getAddress();
+				String ip = addr.toString();
+				// TODO giv klienter deres egen port
 				if (!clientMap.containsKey(ip)) {
-					clientMap.put(ip, new Client(ip, port));
+					DatagramSocket clientSocket = new DatagramSocket();
+					clientSocket.connect(packet.getAddress(), port);
+					clientMap.put(ip, new Client(addr, clientSocket));
 				}
 				clientMap.get(ip).inputReceived(input);
 			}

@@ -40,10 +40,10 @@ public class Client implements MotherConnection {
 		}
 	}
 	
-	public Client(String ip, int port) {
+	public Client(InetAddress addr, DatagramSocket dataSocket) {
 		input = null;
 		try {
-			output = new UDPOutputConnection(new DatagramSocket(port), InetAddress.getByName(ip));
+			output = new UDPOutputConnection(dataSocket, addr);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
