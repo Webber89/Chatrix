@@ -27,17 +27,22 @@ public class UDPServerConnection implements ServerConnection {
 		try {
 			serverSocket = new DatagramSocket(port);
 			while (running) {
-				byte[] data = new byte[1500];
+				byte[] data = new byte[1024];
 				DatagramPacket packet = new DatagramPacket(data, data.length);
 				serverSocket.receive(packet);
 				String input = new String(data);
 				InetAddress addr = packet.getAddress();
 				String ip = addr.toString();
+				int clientPort = packet.getPort();
+				System.out.println("Client's address: " + ip + ", " + packet.getPort());
 				// TODO giv klienter deres egen port
 				if (!clientMap.containsKey(ip)) {
-					DatagramSocket clientSocket = new DatagramSocket();
-					clientSocket.connect(packet.getAddress(), port);
-					clientMap.put(ip, new Client(addr, clientSocket));
+//					String hello = "Hello!";
+//					DatagramPacket helloPacket = new DatagramPacket(hello.getBytes(), hello.getBytes().length, addr, packet.getPort());
+//					serverSocket.send(helloPacket);
+//					DatagramSocket clientSocket = new DatagramSocket();
+//					clientSocket.connect(packet.getAddress(), packet.getPort());
+					clientMap.put(ip, new Client(addr, clientPort, serverSocket));
 				}
 				clientMap.get(ip).inputReceived(input);
 			}
