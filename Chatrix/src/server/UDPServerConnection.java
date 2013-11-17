@@ -30,21 +30,19 @@ public class UDPServerConnection implements ServerConnection {
 				byte[] data = new byte[1024];
 				DatagramPacket packet = new DatagramPacket(data, data.length);
 				serverSocket.receive(packet);
-				String input = new String(data);
+				String input = new String(packet.getData());
+				input = input.substring(0, input.indexOf('\n'));
 				InetAddress addr = packet.getAddress();
 				String ip = addr.toString();
 				int clientPort = packet.getPort();
-				System.out.println("Client's address: " + ip + ", " + packet.getPort());
-				// TODO giv klienter deres egen port
 				if (!clientMap.containsKey(ip)) {
-//					String hello = "Hello!";
-//					DatagramPacket helloPacket = new DatagramPacket(hello.getBytes(), hello.getBytes().length, addr, packet.getPort());
-//					serverSocket.send(helloPacket);
-//					DatagramSocket clientSocket = new DatagramSocket();
-//					clientSocket.connect(packet.getAddress(), packet.getPort());
 					clientMap.put(ip, new Client(addr, clientPort, serverSocket));
 				}
-				clientMap.get(ip).inputReceived(input);
+				if (input.equals("ping")) {
+					clientMap.get(ip).gotPing();
+				}else {
+					clientMap.get(ip).inputReceived(input);
+				} 
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -52,6 +52,8 @@ public class Client implements MotherConnection {
 
 	@Override
 	public void inputReceived(String input) {
+		active = true;
+		gotPing();
 		System.out.println("Message received: " + input);
 		try {
 			message = Message.parseJSONtoMessage(input);
