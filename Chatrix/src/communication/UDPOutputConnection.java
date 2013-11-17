@@ -24,7 +24,6 @@ public class UDPOutputConnection implements OutputConnection {
 
 	@Override
 	public void send(String content) throws IOException {
-	    System.out.println("Writing: " + content + " to: " + ip + "@" + clientPort);
 	    content += "\n";
 	    byte[] data = new byte[1024];
 	    data = content.getBytes();

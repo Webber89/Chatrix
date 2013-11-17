@@ -77,6 +77,7 @@ public class ClientConnection implements MotherConnection
     @Override
     public void inputReceived(String input)
     {
+	gotPing();
 	try
 	{
 	    Message message = Message.parseJSONtoMessage(input);
@@ -232,6 +233,7 @@ public class ClientConnection implements MotherConnection
 
     public void reconnect() throws IOException
     {
+	
 	isReconnected = false;
 	long delay = 1;
 	ExecutorService reconnectService = Executors.newFixedThreadPool(1);
@@ -250,6 +252,7 @@ public class ClientConnection implements MotherConnection
 				Thread.sleep(500);
 				if (!isReconnected)
 				{
+				   if(conType.equals("TCP")){
 				    InputConnection tempCon = input;
 				    connect();
 				    Message m = new Message(Message.Type.REJOIN);
@@ -258,6 +261,7 @@ public class ClientConnection implements MotherConnection
 				    output.send(m.toJson());
 				    System.out.println("succesfull connect");
 				    tempCon.setMother(null);
+				   }
 				    isReconnected = true;
 				    gotPing = true;
 				    pingService.shutdownNow();

@@ -140,15 +140,17 @@ public class ClientController
 
     public void lostConnection()
     {
-	if (!isConnected)
+	if (!isConnected || conType.equals("UDP"))
 	{
 
 	} else
 	{
+	    
 	    ClientGUI.getInstance().lostConnection();
 	    isConnected = false;
 	    try
 	    {
+		
 		connection.reconnect();
 	    } catch (IOException e)
 	    {

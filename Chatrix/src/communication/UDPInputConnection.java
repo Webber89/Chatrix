@@ -37,12 +37,10 @@ public class UDPInputConnection implements InputConnection {
 			} else {
 				byte[] data = new byte[1024];
 				DatagramPacket receivePacket = new DatagramPacket(data, data.length);
-//				System.out.println("Waiting for data");
 				inputSocket.receive(receivePacket);
-//				System.out.println("UDP received data");
 				String inputString = new String(receivePacket.getData());
 				inputString = inputString.substring(0,inputString.indexOf('\n'));
-				System.out.println("Received input:"+inputString +" Her slutter inputString!");
+				System.out.println("input:"+inputString);
 				
 				if (inputString != null) {
 					if (inputString.startsWith("ping")) {
@@ -57,7 +55,6 @@ public class UDPInputConnection implements InputConnection {
 
 	@Override
 	public void setInactive() {
-		isActive = false;
 	}
 
 	@Override
